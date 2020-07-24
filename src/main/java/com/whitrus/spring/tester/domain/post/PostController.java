@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,6 +32,7 @@ import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
 
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/posts")
 @RequiredArgsConstructor
@@ -87,7 +89,7 @@ public class PostController {
 	}
 	
 	@PostMapping("/file")
-	public ResponseEntity<?> uploadFile(@Valid @RequestPart PostInsertDTO post, @RequestPart MultipartFile file, @RequestParam(defaultValue = "basic") String view) throws FileNotFoundException, IOException{
+	public ResponseEntity<?> uploadFile(@RequestPart @Valid PostInsertDTO post, @RequestPart MultipartFile file, @RequestParam(defaultValue = "basic") String view) throws FileNotFoundException, IOException{
 		
 		File userHome = new File(System.getProperty("user.home"));
 		File userDesktop = new File(userHome, "desktop");

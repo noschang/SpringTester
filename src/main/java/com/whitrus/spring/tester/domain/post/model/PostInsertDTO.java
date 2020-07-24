@@ -3,6 +3,8 @@ package com.whitrus.spring.tester.domain.post.model;
 import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_READING;
 import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_UPDATING;
 
+import javax.validation.constraints.NotBlank;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.whitrus.spring.tester.domain.json.JsonData;
 
@@ -14,18 +16,18 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public final class PostInsertDTO {
+
+	@NotBlank
 	private String title;
+
+	@NotBlank
 	private String content;
+
 	private JsonData properties;
 
 	public void applyToPost(Post post) {
-		if (title != null) {
-			post.setTitle(title);
-		}
-
-		if (content != null) {
-			post.setContent(content);
-		}
+		post.setTitle(title);
+		post.setContent(content);
 
 		if (properties != null) {
 			applyProperties(properties, post);
