@@ -11,10 +11,12 @@ import com.whitrus.spring.tester.domain.post.comment.model.PostCommentDTO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @JsonInclude(NON_NULL)
 @Getter
 @RequiredArgsConstructor
+@ToString
 public final class PostDTO {
 
 	private final Long id;

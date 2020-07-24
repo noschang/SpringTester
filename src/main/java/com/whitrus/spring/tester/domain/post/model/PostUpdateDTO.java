@@ -10,9 +10,11 @@ import com.whitrus.spring.tester.domain.json.JsonData;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @NoArgsConstructor
+@ToString
 public final class PostUpdateDTO {
 	private PatchModification<String> title;
 	private PatchModification<String> content;

@@ -3,10 +3,17 @@ package com.whitrus.spring.tester.domain.post;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
+
+import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,7 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.whitrus.spring.tester.domain.post.model.PostInsertDTO;
 import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
@@ -76,7 +85,19 @@ public class PostController {
 
 		return createPostResponse(postService.createRandomPost(), view);
 	}
-
+	
+	@PostMapping("/file")
+	public ResponseEntity<?> uploadFile(@Valid @RequestPart PostInsertDTO post, @RequestPart MultipartFile file, @RequestParam(defaultValue = "basic") String view) throws FileNotFoundException, IOException{
+		
+		File userHome = new File(System.getProperty("user.home"));
+		File userDesktop = new File(userHome, "desktop");
+		File outputFile = new File(userDesktop, file.getOriginalFilename());
+		
+		FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(outputFile));
+		
+		return createNewPost(post, view);
+	}
+	
 	private ResponseEntity<?> createPostResponse(Long postId, String view) {
 		
 		Object post = findPostById(postId, view).getBody();		

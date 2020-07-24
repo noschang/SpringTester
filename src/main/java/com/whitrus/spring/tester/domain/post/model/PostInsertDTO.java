@@ -8,9 +8,11 @@ import com.whitrus.spring.tester.domain.json.JsonData;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @NoArgsConstructor
+@ToString
 public final class PostInsertDTO {
 	private String title;
 	private String content;
