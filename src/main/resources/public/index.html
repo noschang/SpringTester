@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf8">
+
+<head>
+    <title>Test</title>
+    <style>
+        :root {
+            --page-background: #fafafa;
+            --primary-background: #f3f3f3;
+            --secondary-background: #6495ed;
+            --primary-border-color: #aeaeae;
+        }
+
+        html {
+            padding: 5px;
+            background-color: var(--page-background);
+            font-size: large;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        body {
+            padding: 0px;
+        }
+
+        form {
+            width: 500px;
+        }
+
+        button {
+            color: #f6f6f6;
+            background-color: var(--secondary-background);
+            border: 1px solid var(--primary-border-color);
+            min-height: 40px;
+            min-width: 150px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        button:hover {
+            filter: brightness(105%);
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid var(--primary-border-color);
+            background-color: var(--primary-background);
+            font-size: 0.95em;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        .error-container,
+        .success-container,
+        .field-container {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .error-container {
+            color: red;
+        }
+
+        .success-container {
+            color: green;
+        }
+
+        .button-container {
+            position: relative;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <div class="field-container">
+            <label for="input_file">File:</label>
+            <input id="input_file" type="file">
+        </div>
+        <div class="field-container">
+            <label for="input_post_title">Post title:</label>
+            <input id="input_post_title" type="text">
+        </div>
+        <div class="field-container">
+            <label for="input_post_content">Post content:</label>
+            <textarea id="input_post_content" cols="30" rows="10"></textarea>
+        </div>
+        <div class="field-container">
+            <label for="input_post_views">Views:</label>
+            <input id="input_post_views" type="number" min="0" max="5000" value="500">
+        </div>
+        <div class="field-container">
+            <label for="input_post_likes">Likes:</label>
+            <input id="input_post_likes" type="number" min="0" max="5000" value="200">
+        </div>
+        <div class="field-container">
+            <label for="input_post_dislikes">Dislikes:</label>
+            <input id="input_post_dislikes" type="number" min="0" max="5000" value="100">
+        </div>
+        <div class="button-container">
+            <button id="button_send" type="button" onclick="sendData()">Send</button>
+        </div>
+        <div id="div_result">
+            <!-- Errors are rendered here -->
+        </div>
+    </form>
+
+
+
+    <script>
+        function sendData(event) {
+            const formData = processForm()
+            const request = new XMLHttpRequest()
+
+            request.onreadystatechange = function () { processResponse(request) }
+            request.open('POST', '/spring/posts/file', true)
+            request.send(formData)
+        }
+
+        function processForm() {
+            const fileInput = document.getElementById('input_file')
+            const titleInput = document.getElementById('input_post_title')
+            const contentInput = document.getElementById('input_post_content')
+            const viewsInput = document.getElementById('input_post_views')
+            const likesInput = document.getElementById('input_post_likes')
+            const dislikesInput = document.getElementById('input_post_dislikes')
+
+            const post = {
+                title: titleInput.value,
+                content: contentInput.value,
+                properties: {
+                    views: viewsInput.value,
+                    likes: likesInput.value,
+                    dislikes: dislikesInput.value
+                }
+            }
+
+            const formData = new FormData()
+
+            formData.append('file', fileInput.files[0])
+            formData.append('post', new Blob([JSON.stringify(post)], { type: 'application/json' }))
+
+            return formData
+        }
+
+        function processResponse(request) {
+            if (request.readyState === XMLHttpRequest.DONE) {
+                const response = JSON.parse(request.response)
+
+                switch (request.status) {
+                    case 200:
+                    case 201:
+                        return handleSuccess(request, response)
+                    default:
+                        return handleFailure(request, response)
+                }
+            }
+        }
+
+        function handleSuccess(request, response) {
+            clearPreviousMessages()
+
+            console.log('Success!')
+            console.log(response)
+
+            const { id, title } = response
+            appendSuccess(`Created post with id ${id}: <br><br> ${JSON.stringify(response)}`)
+        }
+
+        function handleFailure(request, response) {
+            const { errors } = response
+            clearPreviousMessages()
+
+            if (errors) {
+                handleValidationErrors(request, response, errors)
+            } else {
+                handleOtherErrors(request, response)
+            }
+        }
+
+        function handleValidationErrors(request, response, errors) {
+            errors.sort(byFieldName).forEach(appendValidationError)
+        }
+
+        function handleOtherErrors(request, response) {
+            console.error('Error!')
+            console.error(response)
+
+            appendError(`${response.error} - ${response.message}`)
+        }
+
+        function clearPreviousMessages() {
+            document.getElementById('div_result').innerHTML = ''
+        }
+
+        function appendMessage(message, messageClass) {
+            const resultDiv = document.getElementById('div_result')
+            const messageDiv = document.createElement('div')
+
+            messageDiv.setAttribute('class', messageClass)
+            messageDiv.innerHTML = message
+
+            resultDiv.append(messageDiv)
+        }
+
+        function appendError(message) {
+            appendMessage(message, 'error-container')
+        }
+
+        function appendSuccess(message) {
+            appendMessage(message, 'success-container')
+        }
+
+        function appendValidationError(error) {
+            appendError(`Field '${error.field}': ${error.defaultMessage}`)
+        }
+
+        function byFieldName(errorA, errorB) {
+            return errorA.field.localeCompare(errorB.field)
+        }
+
+    </script>
+</body>
+
+</html>
