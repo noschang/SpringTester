@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.whitrus.spring.tester.domain.post.model.DoiDTO;
 import com.whitrus.spring.tester.domain.post.model.PostInsertDTO;
 import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
 
@@ -98,6 +99,12 @@ public class PostController {
 		FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(outputFile));
 		
 		return createNewPost(post, view);
+	}
+	
+	@PostMapping("/doi")
+	public ResponseEntity<?> testDOI(@Valid @RequestBody DoiDTO doiDTO, @RequestParam(defaultValue = "basic") String view) {
+
+		return createPostResponse(postService.createRandomPost(), view);
 	}
 	
 	private ResponseEntity<?> createPostResponse(Long postId, String view) {

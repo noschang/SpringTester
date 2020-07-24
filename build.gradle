@@ -40,6 +40,9 @@ dependencies {
 	
 	// https://mvnrepository.com/artifact/com.cosium.spring.data/spring-data-jpa-entity-graph
 	implementation group: 'com.cosium.spring.data', name: 'spring-data-jpa-entity-graph', version: '2.2.6'	
+	
+	// https://mvnrepository.com/artifact/org.apache.httpcomponents/fluent-hc
+	implementation group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.12'	
 }
 
 test {
