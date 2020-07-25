@@ -54,6 +54,7 @@
 
         .error-container,
         .success-container,
+        .progress-bar-container,
         .field-container {
             margin-top: 15px;
             margin-bottom: 15px;
@@ -73,6 +74,7 @@
             width: 100%;
         }
     </style>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 
 <body>
@@ -104,6 +106,11 @@
         <div class="button-container">
             <button id="button_send" type="button" onclick="sendData()">Send</button>
         </div>
+        <div class="progress-bar-container">
+        	<div class="w3-light-grey">
+  				<div id="progress-bar-gauge" class="w3-container w3-blue w3-center" style="width:0%">0%</div>
+			</div>
+        </div>
         <div id="div_result">
             <!-- Errors are rendered here -->
         </div>
@@ -113,10 +120,16 @@
 
     <script>
         function sendData(event) {
+        	
+        	setProgress(0)
+        	clearPreviousMessages()
+        	
             const formData = processForm()
             const request = new XMLHttpRequest()
 
             request.onreadystatechange = function () { processResponse(request) }
+            request.upload.addEventListener("progress", function(evt){ displayProgress(request, evt) }, false)
+            
             request.open('POST', '/spring/posts/file', true)
             request.send(formData)
         }
@@ -149,6 +162,7 @@
 
         function processResponse(request) {
             if (request.readyState === XMLHttpRequest.DONE) {
+            	setProgress(100)
                 const response = JSON.parse(request.response)
 
                 switch (request.status) {
@@ -159,6 +173,14 @@
                         return handleFailure(request, response)
                 }
             }
+        }
+        
+        function displayProgress(request, evt){
+        	
+        	if (evt.lengthComputable) {
+				const progress = Math.round((evt.loaded / (evt.total * 1.0)) * 100)
+				setTimeout(function(){ setProgress(progress) }, 10)
+			}
         }
 
         function handleSuccess(request, response) {
@@ -221,6 +243,13 @@
 
         function byFieldName(errorA, errorB) {
             return errorA.field.localeCompare(errorB.field)
+        }
+        
+        function setProgress(progress){
+        	const bar = document.getElementById('progress-bar-gauge')
+        	
+        	bar.style.width = `${progress}%`
+        	bar.innerHTML = `${progress}%`
         }
 
     </script>

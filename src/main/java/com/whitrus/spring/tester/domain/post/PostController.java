@@ -5,7 +5,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 
@@ -13,7 +12,6 @@ import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,9 +93,9 @@ public class PostController {
 		File userHome = new File(System.getProperty("user.home"));
 		File userDesktop = new File(userHome, "desktop");
 		File outputFile = new File(userDesktop, file.getOriginalFilename());
-		
-		FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(outputFile));
-		
+
+		file.transferTo(outputFile);
+
 		return createNewPost(post, view);
 	}
 	
