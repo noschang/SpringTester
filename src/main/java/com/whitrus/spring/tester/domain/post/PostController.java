@@ -118,8 +118,10 @@ public class PostController {
 	
 //	public static enum Status { UNREVIEWED, UNDER_REVIEW, REVIEWED };
 	
-	@PostMapping("/tests")
+	
 //	public ResponseEntity<?> genericTest(@RequestParam @NotNull @NotEmpty Set<Status> status){
+	
+	@PostMapping("/tests")
 	public ResponseEntity<?> genericTest(@RequestParam @NotEmpty Set<@EntityId Long> ids){
 		
 		return ResponseEntity.ok("Status: " + ids);

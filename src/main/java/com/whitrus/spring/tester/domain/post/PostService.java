@@ -45,7 +45,7 @@ public class PostService {
 	private final PostRepository postRepository;
 	
 	@Transactional(readOnly = true)
-	public Page<PostDTO> findAllPostsAsDTO(@NonNull Pageable pageable) {
+	public Page<PostDTO> findAllPostsAsDTO(@NotNull Pageable pageable) {
 
 		return postRepository.findAllPostsAsDTOs(pageable);
 	}
