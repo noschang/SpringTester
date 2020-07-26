@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.whitrus.spring.tester.domain.post.model.DoiDTO;
 import com.whitrus.spring.tester.domain.post.model.PostInsertDTO;
 import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
+import com.whitrus.spring.tester.domain.post.search.PostSearch;
 
 import lombok.RequiredArgsConstructor;
 
@@ -91,6 +92,15 @@ public class PostController {
 		return createPostResponse(postService.createRandomPost(), view);
 	}
 	
+	@PostMapping("/search")
+	public ResponseEntity<?> searchPosts(@RequestBody PostSearch search, @RequestParam(defaultValue = "basic") String view, @SortDefault(value = "title", direction = ASC) Pageable pageable){
+		if (view.equals("details")) {
+			return ResponseEntity.ok(postService.searchPostsWithDetailsAsDTO(search, pageable));
+		}
+		
+		return ResponseEntity.ok(postService.searchPostsAsDTO(search, pageable));
+	}	
+	
 	@PostMapping("/file")
 	public ResponseEntity<?> uploadFile(@RequestPart @Valid PostInsertDTO post, @RequestPart MultipartFile file, @RequestParam(defaultValue = "basic") String view) throws FileNotFoundException, IOException{
 		
@@ -102,6 +112,13 @@ public class PostController {
 
 		return createNewPost(post, view);
 	}
+	
+//	public static enum Status { UNREVIEWED, UNDER_REVIEW, REVIEWED };
+//	@PostMapping("/tests")
+//	public ResponseEntity<?> genericTest(@RequestParam @NotNull @NotEmpty Set<Status> status){
+//		
+//		return ResponseEntity.ok("Status: " + status);
+//	}
 	
 	@PostMapping("/doi")
 	public ResponseEntity<?> testDOI(@Valid @RequestBody DoiDTO doiDTO, @RequestParam(defaultValue = "basic") String view) {

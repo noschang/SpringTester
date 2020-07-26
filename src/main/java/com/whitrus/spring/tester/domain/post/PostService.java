@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +30,7 @@ import com.whitrus.spring.tester.domain.post.model.Post;
 import com.whitrus.spring.tester.domain.post.model.PostDTO;
 import com.whitrus.spring.tester.domain.post.model.PostInsertDTO;
 import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
+import com.whitrus.spring.tester.domain.post.search.PostSearch;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +53,10 @@ public class PostService {
 
 		Page<PostDTO> postDTOs = postRepository.findAllPostsAsDTOs(pageable);
 		
+		return addPostsDetails(postDTOs, pageable);
+	}
+	
+	private Page<PostDTO> addPostsDetails(Page<PostDTO> postDTOs, Pageable pageable) {
 		if (postDTOs.hasContent()) {
 			List<Long> postIds = postDTOs.getContent().stream().map(PostDTO::getId).collect(toList());
 			List<PostCommentDTO> commentDTOs = postRepository.findPostsCommentsAsDTO(postIds);
@@ -56,7 +64,7 @@ public class PostService {
 			Map<Long, List<PostCommentDTO>> commentMap = commentDTOs.stream().collect(groupingBy(PostCommentDTO::getPostId));
 			postDTOs.forEach(postDTO -> postDTO.setComments(commentMap.getOrDefault(postDTO.getId(), null)));
 		}
-
+		
 		return new PageImpl<>(postDTOs.getContent(), pageable, postDTOs.getTotalElements());
 	}
 
@@ -77,6 +85,20 @@ public class PostService {
 		postDTO.setComments(commentsDTOs);
 
 		return postDTO;
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<PostDTO> searchPostsAsDTO(@Valid @NotNull PostSearch search, @NonNull Pageable pageable) {
+		
+		return search.findPosts(postRepository, pageable);
+	}
+	
+	@Transactional(readOnly = false)
+	public Page<PostDTO>  searchPostsWithDetailsAsDTO(@Valid @NotNull PostSearch search, @NonNull Pageable pageable) {
+		
+		Page<PostDTO> postDTOs = search.findPosts(postRepository, pageable);
+		
+		return addPostsDetails(postDTOs, pageable);
 	}
 
 	@Transactional(readOnly = false)
@@ -145,4 +167,5 @@ public class PostService {
 
 	private Supplier<RuntimeException> postNotFoundException(Long postId) {
 		return () -> new PostNotFoundException("post", postId);
-	}}
+	} 
+}
