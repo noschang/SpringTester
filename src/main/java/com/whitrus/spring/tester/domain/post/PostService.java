@@ -36,12 +36,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostService {
 
-//	private final EntityManager entityManager;
-
 	private final PostRepository postRepository;
-
-//	private final PostCommentRepository postCommentRepository;
-
+	
 	@Transactional(readOnly = true)
 	public Page<PostDTO> findAllPostsAsDTO(@NonNull Pageable pageable) {
 
@@ -149,34 +145,4 @@ public class PostService {
 
 	private Supplier<RuntimeException> postNotFoundException(Long postId) {
 		return () -> new PostNotFoundException("post", postId);
-	}
-
-//	public Post findByTitle(String title) {
-//		return postRepository.findByTitleContainsIgnoreCase(title);
-//	}
-//	
-//	@Transactional
-//	public void doSomething() {
-//		Post post = postRepository.getOne(1L);
-//
-//		Random random = new Random();
-//		post.setTitle("Test concurrency " + random.nextInt());
-//
-//		System.out.println("Nice");
-//	}
-//
-//
-//	@Transactional
-//	public void deleteComments(Post post, List<PostComment> comments) {
-//		postCommentRepository.deleteAll(comments);
-//	}
-//
-//	@Transactional
-//	public void delete(Long postId) {
-//
-//		postCommentRepository.deleteAllCommentsFromPost(postId);
-//		postRepository.reallyDeleteById(postId);
-//
-//		System.out.println("Done");
-//	}
-}
+	}}
