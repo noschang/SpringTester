@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.whitrus.spring.tester.domain.post.comment.model.PostComment;
@@ -30,6 +31,7 @@ import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+@Validated
 @Service
 @RequiredArgsConstructor
 public class PostService {

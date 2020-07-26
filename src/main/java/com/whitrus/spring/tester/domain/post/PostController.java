@@ -1,5 +1,6 @@
 package com.whitrus.spring.tester.domain.post;
 
+import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -11,7 +12,9 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +35,7 @@ import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin
+@Validated
 @RestController
 @RequestMapping(path = "/posts")
 @RequiredArgsConstructor
@@ -40,7 +44,7 @@ public class PostController {
 	private final PostService postService;
 
 	@GetMapping
-	public ResponseEntity<?> findAllPosts(@RequestParam(defaultValue = "basic") String view, Pageable pageable) {
+	public ResponseEntity<?> findAllPosts(@RequestParam(defaultValue = "basic") String view, @SortDefault(value = "title", direction = ASC) Pageable pageable) {
 
 		if (view.equals("details")) {
 			return ResponseEntity.ok(postService.findAllPostsWithDetailsAsDTO(pageable));
