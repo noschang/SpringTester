@@ -12,7 +12,6 @@ import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
@@ -35,6 +34,7 @@ import com.whitrus.spring.tester.domain.post.model.DoiDTO;
 import com.whitrus.spring.tester.domain.post.model.PostInsertDTO;
 import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
 import com.whitrus.spring.tester.domain.post.search.PostSearch;
+import com.whitrus.spring.tester.domain.validation.EntityId;
 
 import lombok.RequiredArgsConstructor;
 
@@ -116,12 +116,13 @@ public class PostController {
 		return createNewPost(post, view);
 	}
 	
-	public static enum Status { UNREVIEWED, UNDER_REVIEW, REVIEWED };
+//	public static enum Status { UNREVIEWED, UNDER_REVIEW, REVIEWED };
 	
 	@PostMapping("/tests")
-	public ResponseEntity<?> genericTest(@RequestParam @NotNull @NotEmpty Set<Status> status){
+//	public ResponseEntity<?> genericTest(@RequestParam @NotNull @NotEmpty Set<Status> status){
+	public ResponseEntity<?> genericTest(@RequestParam @NotEmpty Set<@EntityId Long> ids){
 		
-		return ResponseEntity.ok("Status: " + status);
+		return ResponseEntity.ok("Status: " + ids);
 	}
 	
 	@PostMapping("/doi")
