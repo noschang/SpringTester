@@ -88,13 +88,13 @@ public class PostService {
 	}
 	
 	@Transactional(readOnly = true)
-	public Page<PostDTO> searchPostsAsDTO(@Valid @NotNull PostSearch search, @NonNull Pageable pageable) {
+	public Page<PostDTO> searchPostsAsDTO(@NotNull @Valid PostSearch search, @NonNull Pageable pageable) {
 		
 		return search.findPosts(postRepository, pageable);
 	}
 	
 	@Transactional(readOnly = false)
-	public Page<PostDTO>  searchPostsWithDetailsAsDTO(@Valid @NotNull PostSearch search, @NonNull Pageable pageable) {
+	public Page<PostDTO>  searchPostsWithDetailsAsDTO(@NotNull @Valid PostSearch search, @NonNull Pageable pageable) {
 		
 		Page<PostDTO> postDTOs = search.findPosts(postRepository, pageable);
 		
@@ -112,7 +112,7 @@ public class PostService {
 	}
 
 	@Transactional(readOnly = false)
-	public void updatePost(@NonNull Long postId, @NonNull PostUpdateDTO postDTO) {
+	public void updatePost(@NonNull Long postId, @NotNull @Valid PostUpdateDTO postDTO) {
 
 		Post post = postRepository.findById(postId).orElseThrow(postNotFoundException(postId));
 

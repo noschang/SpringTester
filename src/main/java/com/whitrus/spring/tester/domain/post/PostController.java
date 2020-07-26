@@ -8,8 +8,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Set;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
@@ -113,12 +116,13 @@ public class PostController {
 		return createNewPost(post, view);
 	}
 	
-//	public static enum Status { UNREVIEWED, UNDER_REVIEW, REVIEWED };
-//	@PostMapping("/tests")
-//	public ResponseEntity<?> genericTest(@RequestParam @NotNull @NotEmpty Set<Status> status){
-//		
-//		return ResponseEntity.ok("Status: " + status);
-//	}
+	public static enum Status { UNREVIEWED, UNDER_REVIEW, REVIEWED };
+	
+	@PostMapping("/tests")
+	public ResponseEntity<?> genericTest(@RequestParam @NotNull @NotEmpty Set<Status> status){
+		
+		return ResponseEntity.ok("Status: " + status);
+	}
 	
 	@PostMapping("/doi")
 	public ResponseEntity<?> testDOI(@Valid @RequestBody DoiDTO doiDTO, @RequestParam(defaultValue = "basic") String view) {

@@ -3,8 +3,6 @@ package com.whitrus.spring.tester.domain.post;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.constraints.NotBlank;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,21 +34,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	@Query("SELECT NEW com.whitrus.spring.tester.domain.post.model.PostDTO(P.id, P.title, P.content, P.properties) FROM Post P WHERE LOWER(P.content) LIKE %:content%")
 	public Page<PostDTO> findPostsByContentAsDTO(@Param("content") String content, Pageable pageable);
 
-	@Query("SELECT DISTINCT P.id FROM Post P JOIN P.comments C WHERE LOWER(C.content) LIKE %:comment%")	
+	@Query("SELECT DISTINCT P.id FROM Post P JOIN P.comments C WHERE LOWER(C.content) LIKE %:comment%")
 	public List<Long> findPostCommentsIdsByCommentContent(@Param("comment") String comment);
 
 	@Query("SELECT NEW com.whitrus.spring.tester.domain.post.model.PostDTO(P.id, P.title, P.content, P.properties) FROM Post P WHERE P.id IN :postIds")
 	public Page<PostDTO> findPostsByIdsAsDTO(@Param("postIds") List<Long> postId, Pageable pageable);
-	
-//	
-//	@Query("SELECT DISTINCT new com.whitrus.spring.tester.post.api.PostDetailsDTO(P.id, P.title, P.content, P.properties, C.id, C.content, C.upvotes) FROM Post P LEFT JOIN P.comments C WHERE P.id = :postId")
-//	public Optional<PostDetailsDTO> findPostWithDetailsByIdAsDTO(@Param("postId") Long postId);
-
-//	public Post findByTitleContainsIgnoreCase(String title);
-//
-//	@Transactional
-//	@Modifying
-//	@Query("DELETE FROM Post P WHERE P.id = :#{#postId}")
-//	public int reallyDeleteById(@Param("postId") Long postId);
-
 }
