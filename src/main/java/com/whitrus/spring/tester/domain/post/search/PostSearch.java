@@ -13,10 +13,11 @@ import com.whitrus.spring.tester.domain.post.model.PostDTO;
 
 @JsonTypeInfo(use = NAME, include = PROPERTY)
 @JsonSubTypes({
-	@JsonSubTypes.Type(value = PostSearchByTitle.class, name = "BY_TITLE"),
-	@JsonSubTypes.Type(value = PostSearchByContent.class, name = "BY_CONTENT"),
-	@JsonSubTypes.Type(value = PostSearchByTitleAndContent.class, name = "BY_TITLE_AND_CONTENT"),
-	@JsonSubTypes.Type(value = PostSearchByComment.class, name = "BY_COMMENTS")
+	@JsonSubTypes.Type(value = PostSearchByTitle.class, name = PostSearchByTitle.NAME),
+	@JsonSubTypes.Type(value = PostSearchByContent.class, name = PostSearchByContent.NAME),
+	@JsonSubTypes.Type(value = PostSearchByComment.class, name = PostSearchByComment.NAME),
+	@JsonSubTypes.Type(value = PostSearchByTitleAndContent.class, name = PostSearchByTitleAndContent.NAME),
+	@JsonSubTypes.Type(value = PostSearchByTitleAndContentAndComment.class, name = PostSearchByTitleAndContentAndComment.NAME)
 })
 public interface PostSearch {
 

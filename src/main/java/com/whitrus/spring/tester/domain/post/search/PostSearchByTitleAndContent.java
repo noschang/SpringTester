@@ -10,10 +10,14 @@ import com.whitrus.spring.tester.domain.post.model.PostDTO;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public final class PostSearchByTitleAndContent implements PostSearch {
+
+	public static final String NAME = "SearchByTitleAndContent";
 
 	@NotBlank
 	private String title;
@@ -23,6 +27,10 @@ public final class PostSearchByTitleAndContent implements PostSearch {
 
 	@Override
 	public Page<PostDTO> findPosts(PostRepository postRepository, Pageable pageable) {
-		throw new RuntimeException("Not implemented yet!");
+		
+		title = title.toLowerCase();
+		content = content.toLowerCase();
+		
+		return postRepository.findPostsByTitleAndContentAsDTO(title, content, pageable);
 	}
 }

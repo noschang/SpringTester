@@ -2,14 +2,16 @@ package com.whitrus.spring.tester.domain.post;
 
 import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_UPDATING;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import javax.validation.Valid;
@@ -58,7 +60,7 @@ public class PostService {
 	
 	private Page<PostDTO> addPostsDetails(Page<PostDTO> postDTOs, Pageable pageable) {
 		if (postDTOs.hasContent()) {
-			List<Long> postIds = postDTOs.getContent().stream().map(PostDTO::getId).collect(toList());
+			Set<Long> postIds = postDTOs.getContent().stream().map(PostDTO::getId).collect(toSet());
 			List<PostCommentDTO> commentDTOs = postRepository.findPostsCommentsAsDTO(postIds);
 
 			Map<Long, List<PostCommentDTO>> commentMap = commentDTOs.stream().collect(groupingBy(PostCommentDTO::getPostId));
@@ -81,7 +83,7 @@ public class PostService {
 
 		PostDTO postDTO = postRepository.findPostByIdAsDTO(postId).orElseThrow(postNotFoundException(postId));
 
-		List<PostCommentDTO> commentsDTOs = postRepository.findPostsCommentsAsDTO(Arrays.asList(postDTO.getId()));
+		List<PostCommentDTO> commentsDTOs = postRepository.findPostsCommentsAsDTO(new HashSet<>(Arrays.asList(postDTO.getId())));
 		postDTO.setComments(commentsDTOs);
 
 		return postDTO;

@@ -2,6 +2,7 @@ package com.whitrus.spring.tester.domain.post;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	public Optional<PostDTO> findPostByIdAsDTO(@Param("postId") Long postId);
 
 	@Query("SELECT NEW com.whitrus.spring.tester.domain.post.comment.model.PostCommentDTO(P.id, C.id, C.content, C.upvotes) FROM Post P JOIN P.comments C WHERE P.id IN :postIds ORDER BY C.content")
-	public List<PostCommentDTO> findPostsCommentsAsDTO(@Param("postIds") List<Long> postIds);
+	public List<PostCommentDTO> findPostsCommentsAsDTO(@Param("postIds") Set<Long> postIds);
 
 	@Query("SELECT NEW com.whitrus.spring.tester.domain.post.model.PostDTO(P.id, P.title, P.content, P.properties) FROM Post P WHERE LOWER(P.title) LIKE %:title%")
 	public Page<PostDTO> findPostsByTitleAsDTO(@Param("title") String title, Pageable pageable);
@@ -38,5 +39,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	public List<Long> findPostCommentsIdsByCommentContent(@Param("comment") String comment);
 
 	@Query("SELECT NEW com.whitrus.spring.tester.domain.post.model.PostDTO(P.id, P.title, P.content, P.properties) FROM Post P WHERE P.id IN :postIds")
-	public Page<PostDTO> findPostsByIdsAsDTO(@Param("postIds") List<Long> postId, Pageable pageable);
+	public Page<PostDTO> findPostsByIdsAsDTO(@Param("postIds") Set<Long> postIds, Pageable pageable);
+
+	@Query("SELECT NEW com.whitrus.spring.tester.domain.post.model.PostDTO(P.id, P.title, P.content, P.properties) FROM Post P WHERE LOWER(P.title) LIKE %:title% AND LOWER(P.content) LIKE %:content%")
+	public Page<PostDTO> findPostsByTitleAndContentAsDTO(@Param("title") String title, @Param("content") String content, Pageable pageable);
+
+	@Query("SELECT DISTINCT P.id FROM Post P JOIN P.comments C WHERE LOWER(C.content) LIKE %:comment% AND LOWER(P.title) LIKE %:title% AND LOWER(P.content) LIKE %:content%")
+	public List<Long> findPostCommentsIdsByPostTitleAndContentAndCommentContent(@Param("title") String title, @Param("content") String content, @Param("comment") String comment);
 }
