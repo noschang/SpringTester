@@ -21,13 +21,13 @@ public final class PatchModificationValidator implements ConstraintValidator<Val
 		
 		if (patchModification.getAction() == SET && patchModification.getValue() == null) {
 			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate("The value can't be null when the patch action is 'SET'").addConstraintViolation();
+			context.buildConstraintViolationWithTemplate("{com.whitrus.spring.tester.domain.patch.validation.ValidPatchModification.SET.message}").addConstraintViolation();
 			
 			return false;
 		}
 		else if (patchModification.getAction() == UNSET && patchModification.getValue() != null) {
 			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate("Tha value can't be present when the patch action is 'UNSET'").addConstraintViolation();
+			context.buildConstraintViolationWithTemplate("{com.whitrus.spring.tester.domain.patch.validation.ValidPatchModification.UNSET.message}").addConstraintViolation();
 			
 			return false;
 		}

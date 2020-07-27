@@ -9,7 +9,7 @@ public class PostNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public PostNotFoundException(String entityName, Long entityId) {
+	public PostNotFoundException(Long entityId) {
 		super(String.format("Could not find a post with id %1$d", entityId));
 	}
 }

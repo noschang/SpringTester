@@ -13,7 +13,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = PatchModificationValidator.class)
 public @interface ValidPatchModification
 {
-	public String message() default "Invalid patch modification";
+	public String message() default "{com.whitrus.spring.tester.domain.patch.validation.ValidPatchModification.message}";
 
 	public Class<?>[] groups() default {};
 

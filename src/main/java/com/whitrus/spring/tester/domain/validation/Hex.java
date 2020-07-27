@@ -1,5 +1,6 @@
 package com.whitrus.spring.tester.domain.validation;
 
+import static com.whitrus.spring.tester.domain.validation.Hex.LetterCase.INSENSITIVE;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
@@ -12,19 +13,22 @@ import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
-@NotNull
-@Positive
 @Target({ METHOD, FIELD, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = { HexValidator.class })
 @Documented
-public @interface EntityId {
-	String message() default "{com.whitrus.spring.tester.domain.validation.EntityId.message}";
+public @interface Hex {
+
+	String message() default "{com.withrus.spring.tester.validation.Hex.message}";
 
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
+
+	LetterCase value() default INSENSITIVE;
+
+	public static enum LetterCase {
+		LOWER, UPPER, INSENSITIVE
+	}
 }

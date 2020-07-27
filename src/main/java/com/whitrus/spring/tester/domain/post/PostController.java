@@ -1,5 +1,6 @@
 package com.whitrus.spring.tester.domain.post;
 
+import static com.whitrus.spring.tester.domain.validation.Hex.LetterCase.INSENSITIVE;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -8,10 +9,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Set;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
@@ -34,7 +35,7 @@ import com.whitrus.spring.tester.domain.post.model.DoiDTO;
 import com.whitrus.spring.tester.domain.post.model.PostInsertDTO;
 import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
 import com.whitrus.spring.tester.domain.post.search.PostSearch;
-import com.whitrus.spring.tester.domain.validation.EntityId;
+import com.whitrus.spring.tester.domain.validation.Hex;
 
 import lombok.RequiredArgsConstructor;
 
@@ -122,9 +123,9 @@ public class PostController {
 //	public ResponseEntity<?> genericTest(@RequestParam @NotNull @NotEmpty Set<Status> status){
 	
 	@PostMapping("/tests")
-	public ResponseEntity<?> genericTest(@RequestParam @NotEmpty Set<@EntityId Long> ids){
+	public ResponseEntity<?> genericTest(@RequestParam @NotNull @Size(min = 32, max = 32) @Hex(INSENSITIVE) String password){
 		
-		return ResponseEntity.ok("Status: " + ids);
+		return ResponseEntity.ok("Password: " + password);
 	}
 	
 	@PostMapping("/doi")

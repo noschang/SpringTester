@@ -164,10 +164,10 @@ public class PostService {
 		if (postRepository.existsById(postId)) {
 			postRepository.deleteById(postId);
 		}
-		throw new PostNotFoundException("post", postId);
+		throw new PostNotFoundException(postId);
 	}
 
 	private Supplier<RuntimeException> postNotFoundException(Long postId) {
-		return () -> new PostNotFoundException("post", postId);
+		return () -> new PostNotFoundException(postId);
 	} 
 }
