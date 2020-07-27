@@ -4,6 +4,7 @@ import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_READ
 import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_UPDATING;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.whitrus.spring.tester.domain.json.JsonData;
@@ -18,9 +19,11 @@ import lombok.ToString;
 public final class PostInsertDTO {
 
 	@NotBlank
+	@Size(max = 128)
 	private String title;
 
 	@NotBlank
+	@Size(max = 256)
 	private String content;
 
 	private JsonData properties;

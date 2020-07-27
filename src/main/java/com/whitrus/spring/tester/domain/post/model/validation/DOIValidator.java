@@ -32,7 +32,7 @@ public final class DOIValidator implements ConstraintValidator<DOI, String> {
 			return response.getStatusLine().getStatusCode() == SC_OK;
 		} catch (IOException e) {
 			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate("An error ocurred while validating the DOI").addConstraintViolation();
+			context.buildConstraintViolationWithTemplate("An error ocurred while validating the ValidPatchModification").addConstraintViolation();
 			return false;
 		}
 	}

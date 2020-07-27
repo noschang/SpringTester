@@ -1,4 +1,4 @@
-package com.whitrus.spring.tester.domain.post.model.validation;
+package com.whitrus.spring.tester.domain.patch;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,12 +8,12 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-@Constraint(validatedBy = DOIValidator.class)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DOI
+@Constraint(validatedBy = PatchModificationValidator.class)
+public @interface ValidPatchModification
 {
-	public String message() default "Inexistent ValidPatchModification";
+	public String message() default "Invalid patch modification";
 
 	public Class<?>[] groups() default {};
 

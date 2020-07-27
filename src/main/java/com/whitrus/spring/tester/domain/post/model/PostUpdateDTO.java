@@ -3,10 +3,14 @@ package com.whitrus.spring.tester.domain.post.model;
 import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_READING;
 import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_UPDATING;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.whitrus.spring.tester.domain.PatchAction;
-import com.whitrus.spring.tester.domain.PatchModification;
 import com.whitrus.spring.tester.domain.json.JsonData;
+import com.whitrus.spring.tester.domain.patch.PatchAction;
+import com.whitrus.spring.tester.domain.patch.PatchModification;
+import com.whitrus.spring.tester.domain.patch.ValidPatchModification;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,11 +20,17 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public final class PostUpdateDTO {
-	private PatchModification<String> title;
-	private PatchModification<String> content;
+	
+	@ValidPatchModification
+	private PatchModification<@NotBlank @Size(max = 128) String> title;
+	
+	@ValidPatchModification
+	private PatchModification<@NotBlank @Size(max = 256) String> content;
+	
+	@ValidPatchModification
 	private PatchModification<JsonData> properties;
 
-	public void applyToPost(Post post) {
+	public void applyUpdate(Post post) {
 		if (title != null) {
 			applyTitle(title.getAction(), title.getValue(), post);
 		}

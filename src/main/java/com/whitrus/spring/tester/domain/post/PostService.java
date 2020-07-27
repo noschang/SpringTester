@@ -118,7 +118,7 @@ public class PostService {
 
 		Post post = postRepository.findById(postId).orElseThrow(postNotFoundException(postId));
 
-		postDTO.applyToPost(post);
+		postDTO.applyUpdate(post);
 	}
 
 	@Transactional(readOnly = false)
