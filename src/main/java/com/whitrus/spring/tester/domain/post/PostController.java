@@ -35,6 +35,7 @@ import com.whitrus.spring.tester.domain.post.model.DoiDTO;
 import com.whitrus.spring.tester.domain.post.model.PostInsertDTO;
 import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
 import com.whitrus.spring.tester.domain.post.search.PostSearch;
+import com.whitrus.spring.tester.domain.validation.EntityId;
 import com.whitrus.spring.tester.domain.validation.Hex;
 
 import lombok.RequiredArgsConstructor;
@@ -123,7 +124,7 @@ public class PostController {
 //	public ResponseEntity<?> genericTest(@RequestParam @NotNull @NotEmpty Set<Status> status){
 	
 	@PostMapping("/tests")
-	public ResponseEntity<?> genericTest(@RequestParam @NotNull @Size(min = 32, max = 32) @Hex(INSENSITIVE) String password){
+	public ResponseEntity<?> genericTest(@RequestParam @EntityId Long id, @RequestParam @NotNull @Size(min = 32, max = 32) @Hex(INSENSITIVE) String password){
 		
 		return ResponseEntity.ok("Password: " + password);
 	}

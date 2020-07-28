@@ -20,7 +20,7 @@ import javax.validation.Payload;
 @Documented
 public @interface Hex {
 
-	String message() default "{com.withrus.spring.tester.validation.Hex.message}";
+	String message() default "{com.whitrus.spring.tester.domain.validation.Hex.message}";
 
 	Class<?>[] groups() default {};
 
