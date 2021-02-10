@@ -12,10 +12,12 @@ import com.whitrus.spring.tester.domain.patch.PatchAction;
 import com.whitrus.spring.tester.domain.patch.PatchModification;
 import com.whitrus.spring.tester.domain.patch.ValidPatchModification;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Getter
 @Setter
 @NoArgsConstructor
 @ToString

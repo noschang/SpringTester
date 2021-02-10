@@ -42,7 +42,11 @@ dependencies {
 	implementation group: 'com.cosium.spring.data', name: 'spring-data-jpa-entity-graph', version: '2.2.6'	
 	
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents/fluent-hc
-	implementation group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.12'	
+	implementation group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.12'
+	
+	// https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
+	implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
+		
 }
 
 test {

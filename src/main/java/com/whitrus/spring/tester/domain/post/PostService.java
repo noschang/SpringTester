@@ -104,7 +104,7 @@ public class PostService {
 	}
 
 	@Transactional(readOnly = false)
-	public Long createNewPost(@NonNull PostInsertDTO postDTO) {
+	public Long createNewPost(@NotNull @Valid PostInsertDTO postDTO) {
 
 		Post post = new Post();
 

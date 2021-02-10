@@ -78,7 +78,7 @@ public class PostController {
 	}
 	
 	@PatchMapping("/{postId}")
-	public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PostUpdateDTO postDTO, @RequestParam(defaultValue = "basic") String view) {
+	public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody @Valid PostUpdateDTO postDTO, @RequestParam(defaultValue = "basic") String view) {
 		
 		postService.updatePost(postId, postDTO);
 		
@@ -86,7 +86,7 @@ public class PostController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> createNewPost(@RequestBody PostInsertDTO postDTO, @RequestParam(defaultValue = "basic") String view) {
+	public ResponseEntity<?> createNewPost(@RequestBody @Valid PostInsertDTO postDTO, @RequestParam(defaultValue = "basic") String view) {
 
 		return createPostResponse(postService.createNewPost(postDTO), view);
 	}
