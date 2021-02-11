@@ -18,6 +18,7 @@ public @interface FieldMatch
     String message() default "{com.whitrus.spring.tester.domain.validation.FieldMatch.message}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
+    
     String first();
     String second();
 

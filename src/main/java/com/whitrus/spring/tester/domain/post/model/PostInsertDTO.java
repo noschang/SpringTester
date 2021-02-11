@@ -2,6 +2,7 @@ package com.whitrus.spring.tester.domain.post.model;
 
 import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_READING;
 import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_UPDATING;
+import static com.whitrus.spring.tester.domain.validation.Hex.LetterCase.UPPER;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -11,6 +12,8 @@ import org.hibernate.validator.constraints.Range;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.whitrus.spring.tester.domain.json.JsonData;
 import com.whitrus.spring.tester.domain.validation.FieldMatch;
+import com.whitrus.spring.tester.domain.validation.Hex;
+import com.whitrus.spring.tester.domain.validation.Hex.LetterCase;
 import com.whitrus.spring.tester.domain.validation.conditional.ConditionalValidation;
 
 import lombok.Getter;
@@ -35,17 +38,19 @@ public final class PostInsertDTO {
 	@Size(max = 256)
 	private String content;
 
-	@Size(min = 5, max = 50)
-	private String dummy;
-
 	@Range(min = 5, max = 10)
 	private Integer foo;
 
 	@Size(min = 5, max = 15)
 	private String bar;
 
-	private String barCheck;
+	@Hex(value = UPPER, message = "O campo deve ser um string md5 maiúscula")
+	@Size(min = 5, max = 50)
+	private String dummy;
 
+	@Size(min = 5, max = 50)
+	private String dummyConfirm;
+	
 	private JsonData properties;
 
 	public void applyToPost(Post post) {
