@@ -61,8 +61,11 @@ public class SpeechController {
 	public ResponseEntity<StreamingResponseBody> synth(@RequestParam String text,
 			@RequestParam(defaultValue = "0") int voiceIndex, HttpServletResponse response) {
 
+ 
+		
 		SpeechRequest request = new SpeechRequest();
 		SpeechVoice voice = new ArrayList<>(speechService.findAllVoices()).get(voiceIndex);
+//		SpeechVoice voice = speechService.findAllVoices().stream().filter(v -> v.getId().equals("google:pt-BR-Wavenet-A")).findFirst().get();
 		SpeechOptions options = new SpeechOptions();
 
 		options.setVoice(voice);

@@ -16,6 +16,7 @@ import com.whitrus.spring.tester.domain.speech.exceptions.SpeechSynthetizationEx
 import com.whitrus.spring.tester.domain.speech.model.SpeechVoice;
 import com.whitrus.spring.tester.domain.speech.synthetizers.ESpeakNGSynthetizer;
 import com.whitrus.spring.tester.domain.speech.synthetizers.ESpeakSynthetizer;
+import com.whitrus.spring.tester.domain.speech.synthetizers.GoogleSpeechSynthetizer;
 
 @Service
 @Validated
@@ -29,6 +30,7 @@ public class SpeechService {
 
 		synthetizers.add(new ESpeakSynthetizer());
 		synthetizers.add(new ESpeakNGSynthetizer());
+		synthetizers.add(new GoogleSpeechSynthetizer());
 
 		synthetizers.forEach(synthetizer -> {
 			synthetizer.getVoices().forEach(voice -> {
