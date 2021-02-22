@@ -1,7 +1,5 @@
-package com.whitrus.spring.tester.domain.validation;
+package com.whitrus.spring.tester.domain.post.model.validation;
 
-import static com.whitrus.spring.tester.domain.validation.Hex.LetterCase.INSENSITIVE;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
@@ -14,22 +12,22 @@ import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
+import javax.validation.constraints.Size;
 
-@Target({ METHOD, FIELD, PARAMETER, TYPE_USE, ANNOTATION_TYPE })
+import com.whitrus.spring.tester.domain.validation.Hex;
+import com.whitrus.spring.tester.domain.validation.Hex.LetterCase;
+
+@Target({ METHOD, FIELD, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = { HexValidator.class })
 @Documented
-public @interface Hex {
+@Constraint(validatedBy = {})
 
-	String message() default "{com.whitrus.spring.tester.domain.validation.Hex.message}";
+@Size(min = 5, max = 50)
+@Hex(value = LetterCase.UPPER)
+public @interface ValidDummy {
+	String message() default "{com.whitrus.spring.tester.domain.post.model.validation.ValidDummy.message}";
 
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
-
-	LetterCase value() default INSENSITIVE;
-
-	public static enum LetterCase {
-		LOWER, UPPER, INSENSITIVE
-	}
 }

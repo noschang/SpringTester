@@ -1,5 +1,6 @@
 package com.whitrus.spring.tester.domain.validation;
 
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
@@ -17,7 +18,7 @@ import javax.validation.constraints.Positive;
 
 @NotNull
 @Positive
-@Target({ METHOD, FIELD, PARAMETER, TYPE_USE })
+@Target({ METHOD, FIELD, PARAMETER, TYPE_USE, ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
 @Documented

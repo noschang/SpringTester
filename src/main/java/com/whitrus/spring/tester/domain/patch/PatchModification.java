@@ -3,11 +3,13 @@ package com.whitrus.spring.tester.domain.patch;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 public final class PatchModification<T> {
 	
 	private final PatchAction action;

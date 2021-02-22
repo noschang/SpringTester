@@ -6,11 +6,16 @@ import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_UPDA
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.whitrus.spring.tester.domain.json.JsonData;
 import com.whitrus.spring.tester.domain.patch.PatchAction;
 import com.whitrus.spring.tester.domain.patch.PatchModification;
 import com.whitrus.spring.tester.domain.patch.ValidPatchModification;
+import com.whitrus.spring.tester.domain.post.model.validation.ValidDummy;
+import com.whitrus.spring.tester.domain.validation.FieldMatch;
+import com.whitrus.spring.tester.domain.validation.conditional.ConditionalValidation;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,14 +26,29 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
+@ConditionalValidation(ifPresent = "foo", required = "bar")
+@ConditionalValidation(ifPresent = "dummy", required = "dummyConfirm")
+@FieldMatch(first = "dummy", second = "dummyConfirm")
 public final class PostUpdateDTO {
-	
+
 	@ValidPatchModification
 	private PatchModification<@NotBlank @Size(max = 128) String> title;
-	
+
 	@ValidPatchModification
 	private PatchModification<@NotBlank @Size(max = 256) String> content;
-	
+
+	@ValidPatchModification
+	private PatchModification<@Range(min = 5, max = 10) Integer> foo;
+
+	@ValidPatchModification
+	private PatchModification<@Size(min = 5, max = 15) String> bar;
+
+	@ValidPatchModification
+	private PatchModification<@ValidDummy String> dummy;
+
+	@ValidPatchModification
+	private PatchModification<@ValidDummy String> dummyConfirm;
+
 	@ValidPatchModification
 	private PatchModification<JsonData> properties;
 

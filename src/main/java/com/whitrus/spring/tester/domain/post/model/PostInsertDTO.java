@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.whitrus.spring.tester.domain.json.JsonData;
 import com.whitrus.spring.tester.domain.validation.FieldMatch;
 import com.whitrus.spring.tester.domain.validation.Hex;
-import com.whitrus.spring.tester.domain.validation.Hex.LetterCase;
 import com.whitrus.spring.tester.domain.validation.conditional.ConditionalValidation;
 
 import lombok.Getter;
@@ -44,7 +43,7 @@ public final class PostInsertDTO {
 	@Size(min = 5, max = 15)
 	private String bar;
 
-	@Hex(value = UPPER, message = "O campo deve ser um string md5 maiúscula")
+	@Hex(value = UPPER)
 	@Size(min = 5, max = 50)
 	private String dummy;
 
