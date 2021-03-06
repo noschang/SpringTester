@@ -43,7 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 
 	private final PostRepository postRepository;
-	
+
 	@Transactional(readOnly = true)
 	public Page<PostDTO> findAllPostsAsDTO(@NotNull Pageable pageable) {
 
@@ -54,19 +54,20 @@ public class PostService {
 	public Page<PostDTO> findAllPostsWithDetailsAsDTO(@NonNull Pageable pageable) {
 
 		Page<PostDTO> postDTOs = postRepository.findAllPostsAsDTOs(pageable);
-		
+
 		return addPostsDetails(postDTOs, pageable);
 	}
-	
+
 	private Page<PostDTO> addPostsDetails(Page<PostDTO> postDTOs, Pageable pageable) {
 		if (postDTOs.hasContent()) {
 			Set<Long> postIds = postDTOs.getContent().stream().map(PostDTO::getId).collect(toSet());
 			List<PostCommentDTO> commentDTOs = postRepository.findPostsCommentsAsDTO(postIds);
 
-			Map<Long, List<PostCommentDTO>> commentMap = commentDTOs.stream().collect(groupingBy(PostCommentDTO::getPostId));
+			Map<Long, List<PostCommentDTO>> commentMap = commentDTOs.stream()
+					.collect(groupingBy(PostCommentDTO::getPostId));
 			postDTOs.forEach(postDTO -> postDTO.setComments(commentMap.getOrDefault(postDTO.getId(), null)));
 		}
-		
+
 		return new PageImpl<>(postDTOs.getContent(), pageable, postDTOs.getTotalElements());
 	}
 
@@ -83,33 +84,31 @@ public class PostService {
 
 		PostDTO postDTO = postRepository.findPostByIdAsDTO(postId).orElseThrow(postNotFoundException(postId));
 
-		List<PostCommentDTO> commentsDTOs = postRepository.findPostsCommentsAsDTO(new HashSet<>(Arrays.asList(postDTO.getId())));
+		List<PostCommentDTO> commentsDTOs = postRepository
+				.findPostsCommentsAsDTO(new HashSet<>(Arrays.asList(postDTO.getId())));
 		postDTO.setComments(commentsDTOs);
 
 		return postDTO;
 	}
-	
+
 	@Transactional(readOnly = true)
 	public Page<PostDTO> searchPostsAsDTO(@NotNull @Valid PostSearch search, @NonNull Pageable pageable) {
-		
+
 		return search.findPosts(postRepository, pageable);
 	}
-	
+
 	@Transactional(readOnly = false)
-	public Page<PostDTO>  searchPostsWithDetailsAsDTO(@NotNull @Valid PostSearch search, @NonNull Pageable pageable) {
-		
+	public Page<PostDTO> searchPostsWithDetailsAsDTO(@NotNull @Valid PostSearch search, @NonNull Pageable pageable) {
+
 		Page<PostDTO> postDTOs = search.findPosts(postRepository, pageable);
-		
+
 		return addPostsDetails(postDTOs, pageable);
 	}
 
 	@Transactional(readOnly = false)
 	public Long createNewPost(@NotNull @Valid PostInsertDTO postDTO) {
 
-		Post post = new Post();
-
-		postDTO.applyToPost(post);
-
+		Post post = postDTO.createNew();
 		return postRepository.save(post).getId();
 	}
 
@@ -118,7 +117,7 @@ public class PostService {
 
 		Post post = postRepository.findById(postId).orElseThrow(postNotFoundException(postId));
 
-		postDTO.applyUpdate(post);
+		postDTO.applyUpdates(post);
 	}
 
 	@Transactional(readOnly = false)
@@ -169,5 +168,5 @@ public class PostService {
 
 	private Supplier<RuntimeException> postNotFoundException(Long postId) {
 		return () -> new PostNotFoundException(postId);
-	} 
+	}
 }

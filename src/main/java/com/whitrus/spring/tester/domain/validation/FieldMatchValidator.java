@@ -48,7 +48,7 @@ public final class FieldMatchValidator implements ConstraintValidator<FieldMatch
 			return valid;
 			
 		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-			String messageTemplate = "An unexpected error occurred on FieldMatchValidator for fields '%1$s' and '%2$s'. This is probably a bug on the validator";
+			String messageTemplate = "An unexpected error occurred on FieldMatchValidator for fields '%1$s' and '%2$s'. This is probably a bug on the validator or a mispelled properties name on the object being validated";
 			String message = String.format(messageTemplate, firstFieldName, secondFieldName);			
 			
 			logger.error(message, ex);
