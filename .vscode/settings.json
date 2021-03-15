@@ -1,0 +1,59 @@
+{
+  "files.exclude": {
+    "gradlew": true,
+    "gradlew.bat": true,
+    "gradle": true,
+    ".gradle": true,
+    "bin": true,
+    ".project": true,
+    ".classpath": true,
+    "target": true,
+    ".git": true
+  },
+  "remote.extensionKind": {
+    "akamud.vscode-theme-onedark": [
+      "ui"
+    ],
+    "ms-vscode-remote.remote-containers": [
+      "workspace","ui"
+    ],
+    "pkief.material-icon-theme": [
+      "ui"
+    ],
+    "ms-azuretools.vscode-docker": [
+      "workspace","ui"
+    ],
+    "vscjava.vscode-java-pack": [
+      "workspace"
+    ],
+    "eamodio.gitlens": [
+      "workspace"
+    ],
+    "mhutchie.git-graph": [
+      "workspace"
+    ],
+    "devine-davies.make-hidden": [
+      "workspace"
+    ],
+    "pivotal.vscode-boot-dev-pack": [
+      "workspace"
+    ],
+    "richardwillis.vscode-gradle-extension-pack": [
+      "workspace"
+    ],
+    "gabrielbb.vscode-lombok": [
+      "workspace"
+    ],
+    "redhat.vscode-yaml": [
+      "workspace"
+    ],
+    "michelemelluso.gitignore": [
+      "workspace"
+    ]
+  },
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.dependency.packagePresentation": "hierarchical",
+  "java.import.gradle.enabled": true,
+  "java.import.maven.enabled": false,
+  "java.test.report.showAfterExecution": "always"
+}

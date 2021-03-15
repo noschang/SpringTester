@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "com.withrus.spring.tester.security.bcrypt.version",
+    "type": "java.lang.String",
+    "description": "The bcrypt version to use when encrypting the passwords"
+  },
+  {
+    "name": "com.withrus.spring.tester.security.bcrypt.strength",
+    "type": "java.lang.String",
+    "description": "The strength (work factor) to use when encrypting the passwords"
+  }
+]}

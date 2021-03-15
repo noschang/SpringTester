@@ -12,10 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.whitrus.spring.tester.domain.PersistentEntityNotFoundException;
+import com.whitrus.spring.tester.domain.post.comment.model.PostComment;
+import com.whitrus.spring.tester.domain.post.comment.model.PostCommentDTO;
+import com.whitrus.spring.tester.domain.post.model.Post;
+import com.whitrus.spring.tester.domain.post.model.PostDTO;
+import com.whitrus.spring.tester.domain.post.model.PostInsertDTO;
+import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
+import com.whitrus.spring.tester.domain.post.search.PostSearch;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,16 +32,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.whitrus.spring.tester.domain.post.comment.model.PostComment;
-import com.whitrus.spring.tester.domain.post.comment.model.PostCommentDTO;
-import com.whitrus.spring.tester.domain.post.exceptions.PostNotFoundException;
-import com.whitrus.spring.tester.domain.post.model.Post;
-import com.whitrus.spring.tester.domain.post.model.PostDTO;
-import com.whitrus.spring.tester.domain.post.model.PostInsertDTO;
-import com.whitrus.spring.tester.domain.post.model.PostUpdateDTO;
-import com.whitrus.spring.tester.domain.post.search.PostSearch;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 
 	private final PostRepository postRepository;
-	
+
 	@Transactional(readOnly = true)
 	public Page<PostDTO> findAllPostsAsDTO(@NotNull Pageable pageable) {
 
@@ -54,26 +53,28 @@ public class PostService {
 	public Page<PostDTO> findAllPostsWithDetailsAsDTO(@NonNull Pageable pageable) {
 
 		Page<PostDTO> postDTOs = postRepository.findAllPostsAsDTOs(pageable);
-		
+
 		return addPostsDetails(postDTOs, pageable);
 	}
-	
+
 	private Page<PostDTO> addPostsDetails(Page<PostDTO> postDTOs, Pageable pageable) {
 		if (postDTOs.hasContent()) {
 			Set<Long> postIds = postDTOs.getContent().stream().map(PostDTO::getId).collect(toSet());
 			List<PostCommentDTO> commentDTOs = postRepository.findPostsCommentsAsDTO(postIds);
 
-			Map<Long, List<PostCommentDTO>> commentMap = commentDTOs.stream().collect(groupingBy(PostCommentDTO::getPostId));
+			Map<Long, List<PostCommentDTO>> commentMap = commentDTOs.stream()
+					.collect(groupingBy(PostCommentDTO::getPostId));
 			postDTOs.forEach(postDTO -> postDTO.setComments(commentMap.getOrDefault(postDTO.getId(), null)));
 		}
-		
+
 		return new PageImpl<>(postDTOs.getContent(), pageable, postDTOs.getTotalElements());
 	}
 
 	@Transactional(readOnly = true)
 	public PostDTO findPostByIdAsDTO(@NonNull Long postId) {
 
-		PostDTO postDTO = postRepository.findPostByIdAsDTO(postId).orElseThrow(postNotFoundException(postId));
+		PostDTO postDTO = postRepository.findPostByIdAsDTO(postId)
+				.orElseThrow(() -> new PersistentEntityNotFoundException(postId, Post.class));
 
 		return postDTO;
 	}
@@ -81,44 +82,44 @@ public class PostService {
 	@Transactional(readOnly = true)
 	public PostDTO findPostWithDetailsByIdAsDTO(@NonNull Long postId) {
 
-		PostDTO postDTO = postRepository.findPostByIdAsDTO(postId).orElseThrow(postNotFoundException(postId));
+		PostDTO postDTO = postRepository.findPostByIdAsDTO(postId)
+				.orElseThrow(() -> new PersistentEntityNotFoundException(postId, Post.class));
 
-		List<PostCommentDTO> commentsDTOs = postRepository.findPostsCommentsAsDTO(new HashSet<>(Arrays.asList(postDTO.getId())));
+		List<PostCommentDTO> commentsDTOs = postRepository
+				.findPostsCommentsAsDTO(new HashSet<>(Arrays.asList(postDTO.getId())));
 		postDTO.setComments(commentsDTOs);
 
 		return postDTO;
 	}
-	
+
 	@Transactional(readOnly = true)
 	public Page<PostDTO> searchPostsAsDTO(@NotNull @Valid PostSearch search, @NonNull Pageable pageable) {
-		
+
 		return search.findPosts(postRepository, pageable);
 	}
-	
+
 	@Transactional(readOnly = false)
-	public Page<PostDTO>  searchPostsWithDetailsAsDTO(@NotNull @Valid PostSearch search, @NonNull Pageable pageable) {
-		
+	public Page<PostDTO> searchPostsWithDetailsAsDTO(@NotNull @Valid PostSearch search, @NonNull Pageable pageable) {
+
 		Page<PostDTO> postDTOs = search.findPosts(postRepository, pageable);
-		
+
 		return addPostsDetails(postDTOs, pageable);
 	}
 
 	@Transactional(readOnly = false)
 	public Long createNewPost(@NotNull @Valid PostInsertDTO postDTO) {
 
-		Post post = new Post();
-
-		postDTO.applyToPost(post);
-
+		Post post = postDTO.createNew();
 		return postRepository.save(post).getId();
 	}
 
 	@Transactional(readOnly = false)
 	public void updatePost(@NonNull Long postId, @NotNull @Valid PostUpdateDTO postDTO) {
 
-		Post post = postRepository.findById(postId).orElseThrow(postNotFoundException(postId));
+		Post post = postRepository.findById(postId)
+				.orElseThrow(() -> new PersistentEntityNotFoundException(postId, Post.class));
 
-		postDTO.applyUpdate(post);
+		postDTO.applyUpdates(post);
 	}
 
 	@Transactional(readOnly = false)
@@ -164,10 +165,6 @@ public class PostService {
 		if (postRepository.existsById(postId)) {
 			postRepository.deleteById(postId);
 		}
-		throw new PostNotFoundException(postId);
+		throw new PersistentEntityNotFoundException(postId, Post.class);
 	}
-
-	private Supplier<RuntimeException> postNotFoundException(Long postId) {
-		return () -> new PostNotFoundException(postId);
-	} 
 }

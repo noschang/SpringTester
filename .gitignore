@@ -29,5 +29,10 @@ out/
 /.nb-gradle/
 
 ### VS Code ###
-.vscode/
+#.vscode/
 /bin
+
+# Ignore Gradle build output directory
+build
+
+.env

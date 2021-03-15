@@ -1,0 +1,144 @@
+version: "3.3"
+services:
+  # A container with JDK and Gradle/Maven for running and
+  # debugging the application
+  application:
+    build:
+      context: ./application
+      args:
+        USERNAME: "${APP_USERNAME}"
+        # For all available Java versions and JVM types visit:
+        # https://hub.docker.com/_/adoptopenjdk?tab=tags
+        JAVA_VERSION: "15" # Select Java version: 11, 14, 15
+        JVM_TYPE: "openj9" # Select JVM type: openj9, hotspot
+
+        # If true, installs the graphic libraries necessaries to
+        # run Java swing GUI applications from inside the container
+        INSTALL_GRAPHIC_LIBS: "false"
+
+        # For all available Maven versions visit:
+        # https://maven.apache.org/docs/history.html
+        INSTALL_MAVEN: "false"
+        MAVEN_VERSION: "latest"
+
+        # For all available Gradle versions visit:
+        # https://gradle.org/releases/
+        INSTALL_GRADLE: "true"
+        GRADLE_VERSION: "6.3"
+
+        # For all available NodeJS versions visit:
+        # https://nodejs.org/en/download/releases/
+        INSTALL_NODE: "false"
+        NODE_VERSION: "lts/*"
+
+        # If true, installs the Oracle client and the
+        # sqlplus command line utility
+        INSTALL_SQLPLUS: "true"
+
+        # Defines a list of additional system packages to be installed with apt-get.
+        # The package names must be separated by a space. Alternatively, each package
+        # can be put in a new line using the folded style, as explained here:
+        #
+        # https://symfony.com/doc/current/components/yaml/yaml_format.html#strings
+        #
+        # Examples:
+        #
+        # ADDITIONAL_PACKAGES: "package1 package2 package3"
+        # ADDITIONAL_PACKAGES: >-
+        #   package1
+        #   package2
+        #   pakcage3
+        #
+        ADDITIONAL_PACKAGES: "iputils-ping"
+    restart: always
+    user: "${APP_USERNAME}"
+    environment:
+      spring_profiles_active: "dev"
+    depends_on:
+      - dnsserver
+      - database
+
+    # Defines the hostname used to access the container from the
+    # host using the DNS Proxy Server
+    hostname: "app.springtest.dev"
+    expose:
+      - "80" # Exposes port 80 to the private network
+    volumes:
+      # Mounts the project folder in the container workspace
+      - ..:/workspace:cached
+
+      # Mounts the X11 socket file to allow running Java GUI applications from
+      # inside the container (works on Linux only)
+      - /tmp/.X11-unix:/tmp/.X11-unix:cached
+
+      # Mounts a directory where the app can store data during runtime
+      - app_data:/data:cached
+      
+      # Mounts a volume to store vscode extension cache, as explained here:
+      # https://code.visualstudio.com/docs/remote/containers-advanced#_avoiding-extension-reinstalls-on-container-rebuild
+      - vscode_extensions:/extensions:delegated
+    networks:
+      network:
+        aliases:
+          # Defines the hostname used to access the container in the
+          # private network
+          - "app.springtest.dev"
+
+  # A container with the Oracle 11g Express Edition Database
+  # pre configured with some users/schemas
+  database:
+    build:
+      context: ./database
+    restart: always
+    depends_on:
+      - dnsserver
+    # Defines the hostname used to access the container from the
+    # host using the DNS Proxy Server
+    hostname: "db.springtest.dev"
+    expose:
+      - "1521" # Exposes port 1521 to the private network
+    volumes:
+      - db_data:/u01/app/oracle
+    environment:
+      # Improves disk IO performance:
+      # https://github.com/wnameless/docker-oracle-xe-11g
+      ORACLE_DISABLE_ASYNCH_IO: "true"
+    networks:
+      network:
+        aliases:
+          # Defines the hostname used to access the container in the
+          # private network
+          - "db.springtest.dev"
+
+  # A container with a DNS Proxy Server. Alllows accessing the containers
+  # from the host using their hostnames instead of their IPs
+  dnsserver:
+    restart: always
+    # Defines the hostname used to access the container from the
+    # host using the DNS Proxy Server
+    hostname: "dns.springtest.dev"
+    image: defreitas/dns-proxy-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/resolv.conf:/etc/resolv.conf
+    networks:
+      network:
+        aliases:
+          # Defines the hostname used to access the container in the
+          # private network
+          - "dns.springtest.dev"
+
+networks:
+  # This is just to give the network a nice name. The network
+  # will appear as 'springtest_network' instead of 'springtest_default'
+  network:
+    driver: bridge
+
+volumes:
+  # Volume to store vscode extension cache, as explained here:
+  # https://code.visualstudio.com/docs/remote/containers-advanced#_avoiding-extension-reinstalls-on-container-rebuild
+  vscode_extensions:
+  # Volume to store persistent app data
+  app_data:
+  # Volume to store persistent database data
+  db_data:

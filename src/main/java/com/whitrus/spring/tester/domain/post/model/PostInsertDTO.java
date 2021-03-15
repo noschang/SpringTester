@@ -2,32 +2,24 @@ package com.whitrus.spring.tester.domain.post.model;
 
 import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_READING;
 import static com.whitrus.spring.tester.domain.json.JsonData.AccessMode.FOR_UPDATING;
-import static com.whitrus.spring.tester.domain.validation.Hex.LetterCase.UPPER;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Range;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.whitrus.spring.tester.domain.PersistenEntityInsertDTO;
 import com.whitrus.spring.tester.domain.json.JsonData;
-import com.whitrus.spring.tester.domain.validation.FieldMatch;
-import com.whitrus.spring.tester.domain.validation.Hex;
-import com.whitrus.spring.tester.domain.validation.conditional.ConditionalValidation;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@ConditionalValidation(ifPresent = "foo", required = "bar")
-@ConditionalValidation(ifPresent = "dummy", required = "dummyConfirm")
-@FieldMatch(first = "dummy", second = "dummyConfirm")
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public final class PostInsertDTO {
+public final class PostInsertDTO implements PersistenEntityInsertDTO<Post> {
 
 	@NotBlank
 	@Size(max = 128)
@@ -37,31 +29,23 @@ public final class PostInsertDTO {
 	@Size(max = 256)
 	private String content;
 
-	@Range(min = 5, max = 10)
-	private Integer foo;
-
-	@Size(min = 5, max = 15)
-	private String bar;
-
-	@Hex(value = UPPER)
-	@Size(min = 5, max = 50)
-	private String dummy;
-
-	@Size(min = 5, max = 50)
-	private String dummyConfirm;
-	
 	private JsonData properties;
 
-	public void applyToPost(Post post) {
+	@Override
+	public Post createNew() {
+		Post post = new Post();
+
 		post.setTitle(title);
 		post.setContent(content);
 
 		if (properties != null) {
-			applyProperties(properties, post);
+			setProperties(properties, post);
 		}
+
+		return post;
 	}
 
-	private void applyProperties(JsonData properties, Post post) {
+	private void setProperties(JsonData properties, Post post) {
 		ObjectNode insertedProperties = properties.asObject(FOR_READING);
 		ObjectNode postProperties = post.getProperties().asObject(FOR_UPDATING);
 

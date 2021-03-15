@@ -1,19 +1,23 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.6.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'org.springframework.boot' version '2.4.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'eclipse'
 	id 'java'
 }
 
 group = 'com.whitrus.spring.tester'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+
+sourceCompatibility = '15'
 
 
 configurations {
- developmentOnly
-  runtimeClasspath {
-    extendsFrom developmentOnly
-  }
+	developmentOnly
+	
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -24,19 +28,28 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.oracle.ojdbc:ojdbc8'
-	annotationProcessor 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
 	
-	// https://mvnrepository.com/artifact/org.modelmapper/modelmapper
-	//implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.7'	
+	compileOnly 'org.projectlombok:lombok'
+	
+	runtimeOnly 'com.oracle.ojdbc:ojdbc8'
+
+	annotationProcessor 'org.projectlombok:lombok'
+
+	developmentOnly 'org.springframework.boot:spring-boot-configuration-processor'
+
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	
+	runtimeOnly 'com.oracle.ojdbc:ojdbc8'
+	
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+		
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'	
+	
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	
 	// https://mvnrepository.com/artifact/com.cosium.spring.data/spring-data-jpa-entity-graph
 	implementation group: 'com.cosium.spring.data', name: 'spring-data-jpa-entity-graph', version: '2.2.6'	
@@ -55,6 +68,26 @@ dependencies {
 	
 	// https://mvnrepository.com/artifact/com.google.cloud/google-cloud-texttospeech
 	implementation group: 'com.google.cloud', name: 'google-cloud-texttospeech', version: '1.2.8'
+	
+	
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}	
+	
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+  	testImplementation 'org.springframework.security:spring-security-test'
+  	
+  	testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
+  	
+	// https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
+	testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.7.1'	
+  	
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.1'
+	
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.1'
 }
 
 test {
