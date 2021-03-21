@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class InstitutionController {
 	private final InstitutionService institutionService;
 
-	@GetMapping("/")
+	@GetMapping
 	public ResponseEntity<Page<InstitutionDTO>> findAllInstitutions(@RequestParam(defaultValue = "basic") String view,
 			@SortDefault(value = "fullName", direction = ASC) Pageable pageable) {
 
@@ -60,7 +60,7 @@ public class InstitutionController {
 	@GetMapping("/{institutionId}/mantained")
 	public ResponseEntity<Page<InstitutionDTO>> findInstitutionsMantained(@PathVariable Long institutionId,
 			@RequestParam(defaultValue = "basic") String view,
-			@SortDefault(value = "institutionsMantained.fullName", direction = ASC) Pageable pageable) {
+			@SortDefault(value = "M.fullName", direction = ASC) Pageable pageable) {
 
 		if (view.equals("details")) {
 			return ResponseEntity.ok(institutionService.findInstitutionsMantainedWithDetailsByIdAsDTO(institutionId, pageable));

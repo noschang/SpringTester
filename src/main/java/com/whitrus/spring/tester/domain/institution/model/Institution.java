@@ -61,7 +61,7 @@ public class Institution extends PersistentEntity {
 	@OrderBy("fullName asc")
 	@OneToMany(mappedBy = "mantainer", cascade = ALL, fetch = LAZY, orphanRemoval = true)
 	@ToString.Exclude
-	private Set<Institution> mantainedInstitutions = new LinkedHashSet<>();
+	private Set<Institution> institutionsMantained = new LinkedHashSet<>();
 
 	// TODO: implement a validator @CNPJ(modes = {NUMERIC, MASKED}, validated =
 	// {true, false})
@@ -252,33 +252,33 @@ public class Institution extends PersistentEntity {
 	public void setMantainer(@NonNull Institution mantainer) {
 		if (!mantainer.equals(this.mantainer)) {
 			if (this.mantainer != null) {
-				this.mantainer.removeMantainedInstitution(this);
+				this.mantainer.removeInstitutionFromMantained(this);
 			}
 
 			this.mantainer = mantainer;
-			this.mantainer.addMantainedInstitution(this);
+			this.mantainer.addInstitutionToMantained(this);
 		}
 	}
 
 	public void unsetMantainer(@NonNull Institution mantainer) {
 		if (mantainer.equals(this.mantainer)) {
-			this.mantainer.removeMantainedInstitution(this);
+			this.mantainer.removeInstitutionFromMantained(this);
 			this.mantainer = null;
 		}
 	}
 
 	public Set<Institution> getMantainedInstitutions() {
-		return Collections.unmodifiableSet(mantainedInstitutions);
+		return Collections.unmodifiableSet(institutionsMantained);
 	}
 
-	public void addMantainedInstitution(@NonNull Institution institution) {
-		if (this.mantainedInstitutions.add(institution)) {
+	public void addInstitutionToMantained(@NonNull Institution institution) {
+		if (this.institutionsMantained.add(institution)) {
 			institution.setMantainer(this);
 		}
 	}
 
-	public void removeMantainedInstitution(@NonNull Institution institution) {
-		if (this.mantainedInstitutions.remove(institution)) {
+	public void removeInstitutionFromMantained(@NonNull Institution institution) {
+		if (this.institutionsMantained.remove(institution)) {
 			institution.unsetMantainer(this);
 		}
 	}

@@ -40,7 +40,7 @@ public class User extends PersistentEntity {
 
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = "seq_user")
-	@SequenceGenerator(name = "seq_user", sequenceName = "seq_user", allocationSize = 1000)
+	@SequenceGenerator(name = "seq_user", sequenceName = "seq_user", allocationSize = 100)
 	@Column(nullable = false, updatable = false)
 	@Getter
 	private Long id = null;

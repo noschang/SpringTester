@@ -30,5 +30,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	public Optional<UserDTO> findUserWithDetailsByIdAsDTO(@Param("userId") Long userId);
 
 	@Query("SELECT U.password FROM User U WHERE U.id = :userId")
-    public String findUserPasswordById(@Param("userId") Long userId);
+	public String findUserPasswordById(@Param("userId") Long userId);
 }

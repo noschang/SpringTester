@@ -63,7 +63,7 @@ public interface InstitutionRepository extends JpaRepository<Institution, Long> 
 			)
 			FROM Institution I
 			""")
-	public Page<InstitutionDTO> findAllInstitutionsWithDetailsAsDTO(@NotNull Pageable pageable);
+	public Page<InstitutionDTO> findAllInstitutionsWithDetailsAsDTO(Pageable pageable);
 
 	@Query("""
 			SELECT NEW com.whitrus.spring.tester.domain.institution.model.InstitutionDTO
@@ -176,7 +176,7 @@ public interface InstitutionRepository extends JpaRepository<Institution, Long> 
 				M.homePage,
 				M.active
 			)
-			FROM Institution I JOIN I.mantainedInstitutions M WHERE I.id = :institutionId
+			FROM Institution I JOIN I.institutionsMantained M WHERE I.id = :institutionId
 			""")
 	public Page<InstitutionDTO> findInstitutionsMantainedByIdAsDTO(@Param("institutionId") Long institutionId,
 			Pageable pageable);
@@ -207,9 +207,9 @@ public interface InstitutionRepository extends JpaRepository<Institution, Long> 
 				M.addressComplement,
 				M.active
 			)
-			FROM Institution I JOIN I.mantainedInstitutions M WHERE I.id = :institutionId
+			FROM Institution I JOIN I.institutionsMantained M WHERE I.id = :institutionId
 			""")
-	public Page<InstitutionDTO> findInstitutionsMantainedWithDetailsByIdAsDTO(@EntityId Long institutionId,
+	public Page<InstitutionDTO> findInstitutionsMantainedWithDetailsByIdAsDTO(@Param("institutionId") Long institutionId,
 			Pageable pageable);
 
 	public Institution findByShortNameIgnoreCase(String shortName);

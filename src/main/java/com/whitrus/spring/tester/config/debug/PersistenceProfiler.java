@@ -13,6 +13,7 @@ import org.hibernate.engine.spi.EntityEntry;
 import org.hibernate.engine.spi.EntityKey;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.slf4j.Logger;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Aspect
 @Component
+@Profile("profiling")
 @RequiredArgsConstructor
 public class PersistenceProfiler {
 

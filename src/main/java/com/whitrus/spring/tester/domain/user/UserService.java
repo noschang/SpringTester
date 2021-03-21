@@ -3,14 +3,6 @@ package com.whitrus.spring.tester.domain.user;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import com.whitrus.spring.tester.domain.PersistentEntityNotFoundException;
-import com.whitrus.spring.tester.domain.user.model.User;
-import com.whitrus.spring.tester.domain.user.model.UserDTO;
-import com.whitrus.spring.tester.domain.user.model.UserInsertDTO;
-import com.whitrus.spring.tester.domain.user.model.UserUpdateDTO;
-import com.whitrus.spring.tester.domain.user.model.UserDTODependencies;
-import com.whitrus.spring.tester.domain.validation.EntityId;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import lombok.NonNull;
+import com.whitrus.spring.tester.domain.PersistentEntityNotFoundException;
+import com.whitrus.spring.tester.domain.user.model.User;
+import com.whitrus.spring.tester.domain.user.model.UserDTO;
+import com.whitrus.spring.tester.domain.user.model.UserDTODependencies;
+import com.whitrus.spring.tester.domain.user.model.UserInsertDTO;
+import com.whitrus.spring.tester.domain.user.model.UserUpdateDTO;
+import com.whitrus.spring.tester.domain.validation.EntityId;
+
 import lombok.RequiredArgsConstructor;
 
 @Validated
@@ -48,7 +47,7 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public UserDTO findUserWithDetailsByIdAsDTO(@EntityId Long userId) {
 		return userRepository.findUserWithDetailsByIdAsDTO(userId)
-				.orElseThrow(()-> new PersistentEntityNotFoundException(userId, User.class));
+				.orElseThrow(() -> new PersistentEntityNotFoundException(userId, User.class));
 	}
 
 	@Transactional(readOnly = false)
@@ -59,12 +58,21 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = false)
-	public void updateUser(@NonNull Long userId, @NotNull @Valid UserUpdateDTO userUpdateDTO) {
+	public void updateUser(@EntityId Long userId, @NotNull @Valid UserUpdateDTO userUpdateDTO) {
 
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new PersistentEntityNotFoundException(userId, User.class));
 
 		userUpdateDTO.setDependencies(new UserDTODependencies(userRepository, passwordEncoder));
 		userUpdateDTO.applyUpdates(user);
+	}
+
+	@Transactional(readOnly = false)
+	public void deleteUser(@EntityId Long userId) {
+		if (!userRepository.existsById(userId)) {
+			throw new PersistentEntityNotFoundException(userId, User.class);
+		}
+
+		userRepository.deleteById(userId);
 	}
 }

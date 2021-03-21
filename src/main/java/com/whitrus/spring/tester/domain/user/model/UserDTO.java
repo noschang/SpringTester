@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 @RequiredArgsConstructor
 @ToString
-public final class UserDTO {
+public class UserDTO {
 
 	private final Long id;
 
