@@ -13,7 +13,7 @@ import javax.persistence.AttributeConverter;
 
 public final class UserRoleConverter implements AttributeConverter<Set<UserRole>, String>
 {
-	public static final int ROLES_COLUMN_LENGTH = 64;
+	public static final int ROLES_MAX_LENGTH = 64;
 
 	private static final Pattern VERIFICATION_PATTERN;
 	private static final Pattern VALUE_PATTERN;
@@ -58,9 +58,9 @@ public final class UserRoleConverter implements AttributeConverter<Set<UserRole>
 			builder.append("]");
 		}
 
-		if (builder.length() > ROLES_COLUMN_LENGTH)
+		if (builder.length() > ROLES_MAX_LENGTH)
 		{
-			throw new RoleSetConversionException(String.format("The resulting string length is bigger than %d", ROLES_COLUMN_LENGTH));
+			throw new RoleSetConversionException(String.format("The resulting string length is bigger than %d", ROLES_MAX_LENGTH));
 		}
 
 		return builder.toString();

@@ -18,7 +18,11 @@ public final class UserDTO {
 
 	private final String name;
 
-	private final String normalizedName;
-
 	private final String login;
+
+	private final Boolean active;
+
+	public UserDTO(Long id, String name, Boolean active) {
+		this(id, name, null, active);
+	}	
 }

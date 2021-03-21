@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class PersistentEntityNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
+    public PersistentEntityNotFoundException(String message) {
+        super(message);
+    }
+
     public PersistentEntityNotFoundException(Long entityId, Class<? extends PersistentEntity> entityType) {
         super(String.format("Could not find entity of type %2$s with id %1$d", entityId, entityType.getName()));
     }
+
 }

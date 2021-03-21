@@ -22,7 +22,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public final class PostUpdateDTO implements PersistentEntityUpdateDTO<Post> {
+public final class PostUpdateDTO implements PersistentEntityUpdateDTO<Post,Void> {
 
 	@ValidPatchModification
 	private PatchModification<@NotBlank @Size(max = 128) String> title;

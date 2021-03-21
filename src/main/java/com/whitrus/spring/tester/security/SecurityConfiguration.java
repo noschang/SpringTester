@@ -57,8 +57,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Bean
-	public PasswordEncoder passwordEncoder() {		
-		BCryptVersion version = BCryptVersion.valueOf(BCRYPT_VERSION);
+	public BCryptPasswordEncoder passwordEncoder() {		
+		BCryptVersion version = BCryptVersion.valueOf("$" + BCRYPT_VERSION.toUpperCase());
 		int strength = Integer.parseInt(BCRYPT_STRENGTH);
 		
 		return new BCryptPasswordEncoder(version, strength);

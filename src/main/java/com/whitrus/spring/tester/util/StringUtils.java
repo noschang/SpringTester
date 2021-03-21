@@ -24,6 +24,10 @@ public final class StringUtils {
 	 */
 	public static String normalize(String text) {
 
+		if (text == null){
+			return null;
+		}
+
 		text = replaceAccentedCharacters(text);
 		text = removeNonAsciiCharacters(text);
 		text = removeNumbersAndSymbols(text);

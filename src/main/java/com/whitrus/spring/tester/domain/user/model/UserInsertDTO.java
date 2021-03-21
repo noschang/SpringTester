@@ -6,7 +6,6 @@ import javax.validation.constraints.Size;
 import com.whitrus.spring.tester.domain.PersistenEntityInsertDTO;
 import com.whitrus.spring.tester.domain.validation.FieldMatch;
 import com.whitrus.spring.tester.domain.validation.conditional.ConditionalValidation;
-import com.whitrus.spring.tester.util.StringUtils;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +19,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public final class UserInsertDTO implements PersistenEntityInsertDTO<User> {
+public final class UserInsertDTO implements PersistenEntityInsertDTO<User, Void> {
 
 	@NotBlank
 	@Size(min = 3, max = 64)
@@ -30,20 +29,23 @@ public final class UserInsertDTO implements PersistenEntityInsertDTO<User> {
 	@Size(min = 3, max = 64)
 	private String login;
 
+	@NotBlank
 	@Size(min = 3, max = 32)
 	private String password;
 
+	@NotBlank
 	@Size(min = 3, max = 32)
 	private String passwordConfirmation;
+
+	private UserDTODependencies dependencies;
 
 	@Override
 	public User createNew() {
 		User user = new User();
 
+		user.setActive(true);
 		user.setName(name);
-		user.setNormalizedName(StringUtils.normalize(name));
-		
-		user.setLogin(login);		
+		user.setLogin(login);
 
 		/*
 		 * The password is being encrypted at the entity level using a converter, so we

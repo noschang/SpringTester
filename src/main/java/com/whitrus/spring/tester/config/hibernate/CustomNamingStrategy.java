@@ -49,6 +49,7 @@ public class CustomNamingStrategy extends SpringPhysicalNamingStrategy {
 		if (reservedWords.contains(name.getText().toLowerCase())) {
 			Identifier newName = Identifier.toIdentifier(letterCase.apply(name.getText()), true);
 			logger.debug("Renaming identifier from: {} to {}", name.getText(), newName.render());
+			return newName;
 		}
 
 		return super.toPhysicalTableName(name, context);
@@ -74,7 +75,10 @@ public class CustomNamingStrategy extends SpringPhysicalNamingStrategy {
 		} catch (IllegalArgumentException e) {
 			
 			String validValues = Arrays.stream(LetterCase.values()).map(value -> String.format("%1$s, %1$S", value.name().toLowerCase())).collect(joining(", ", "[", "]"));			
-			throw new IllegalArgumentException(String.format("The value '%1$s' is Invalid for property '%2$s'. Valid values are: %3$s", property, propertyName, validValues), e);
+			throw new IllegalArgumentException(
+					String.format("The value '%1$s' is Invalid for property '%2$s'. Valid values are: %3$s", property,
+							propertyName, validValues),
+					e);
 		}
 	}
 

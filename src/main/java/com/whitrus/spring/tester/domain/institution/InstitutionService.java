@@ -27,8 +27,56 @@ public class InstitutionService {
 	}
 
 	@Transactional(readOnly = true)
+	public Page<InstitutionDTO> findAllInstitutionsWithDetailsAsDTO(@NotNull Pageable pageable) {
+		return institutionRepository.findAllInstitutionsWithDetailsAsDTO(pageable);
+	}
+
+	@Transactional(readOnly = true)
 	public InstitutionDTO findInstitutionByIdAsDTO(@EntityId Long institutionId) {
 		return institutionRepository.findInstitutionByIdAsDTO(institutionId)
 				.orElseThrow(() -> new PersistentEntityNotFoundException(institutionId, Institution.class));
+	}
+
+	@Transactional(readOnly = true)
+	public InstitutionDTO findInstitutionWithDetailsByIdAsDTO(@EntityId Long institutionId) {
+		return institutionRepository.findInstitutionWithDetailsByIdAsDTO(institutionId)
+				.orElseThrow(() -> new PersistentEntityNotFoundException(institutionId, Institution.class));
+	}
+
+	@Transactional(readOnly = true)
+	public InstitutionDTO findInstitutionMantainerByIdAsDTO(@EntityId Long institutionId) {
+		if (institutionRepository.existsById(institutionId)) {
+			return institutionRepository.findInstitutionMantainerByIdAsDTO(institutionId).orElseThrow(
+					() -> new PersistentEntityNotFoundException("This institution doesn't have a mantainer"));
+		}
+
+		throw new PersistentEntityNotFoundException(institutionId, Institution.class);
+	}
+
+	@Transactional(readOnly = true)
+	public InstitutionDTO findInstitutionMantainerWithDetailsByIdAsDTO(@EntityId Long institutionId) {
+		if (institutionRepository.existsById(institutionId)) {
+			return institutionRepository.findInstitutionMantainerWithDetailsByIdAsDTO(institutionId).orElseThrow(
+					() -> new PersistentEntityNotFoundException("This institution doesn't have a mantainer"));
+		}
+
+		throw new PersistentEntityNotFoundException(institutionId, Institution.class);
+	}
+
+	public Page<InstitutionDTO> findInstitutionsMantainedByIdAsDTO(@EntityId Long institutionId,
+			@NotNull Pageable pageable) {
+		if (institutionRepository.existsById(institutionId)) {
+			return institutionRepository.findInstitutionsMantainedByIdAsDTO(institutionId, pageable);
+		}
+		throw new PersistentEntityNotFoundException(institutionId, Institution.class);
+	}
+
+	public Page<InstitutionDTO> findInstitutionsMantainedWithDetailsByIdAsDTO(@EntityId Long institutionId,
+			@NotNull Pageable pageable) {
+		if (institutionRepository.existsById(institutionId)) {
+			return institutionRepository.findInstitutionsMantainedWithDetailsByIdAsDTO(institutionId, pageable);
+		}
+
+		throw new PersistentEntityNotFoundException(institutionId, Institution.class);
 	}
 }

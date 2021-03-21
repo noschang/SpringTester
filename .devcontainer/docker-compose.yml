@@ -53,7 +53,8 @@ services:
     restart: always
     user: "${APP_USERNAME}"
     environment:
-      spring_profiles_active: "dev"
+      SPRING_PROFILES_ACTIVE: "dev"
+      SERVER_PORT: "${SERVER_PORT}"
     depends_on:
       - dnsserver
       - database
@@ -62,7 +63,8 @@ services:
     # host using the DNS Proxy Server
     hostname: "app.springtest.dev"
     expose:
-      - "80" # Exposes port 80 to the private network
+      # - "80" # Exposes port 80 to the private network
+      - "${SERVER_PORT}" # Exposes the server port the private network
     volumes:
       # Mounts the project folder in the container workspace
       - ..:/workspace:cached

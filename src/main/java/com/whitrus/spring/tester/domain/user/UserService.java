@@ -8,10 +8,12 @@ import com.whitrus.spring.tester.domain.user.model.User;
 import com.whitrus.spring.tester.domain.user.model.UserDTO;
 import com.whitrus.spring.tester.domain.user.model.UserInsertDTO;
 import com.whitrus.spring.tester.domain.user.model.UserUpdateDTO;
+import com.whitrus.spring.tester.domain.user.model.UserDTODependencies;
 import com.whitrus.spring.tester.domain.validation.EntityId;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
 	public Page<UserDTO> findAllUsersAsDTO(@NotNull Pageable pageable) {
@@ -33,7 +36,7 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public Page<UserDTO> findAllUsersWithDetailsAsDTO(@NotNull Pageable pageable) {
-		throw new UnsupportedOperationException("Not implemented yet!");
+		return userRepository.findAllUsersWithDetailsAsDTO(pageable);
 	}
 
 	@Transactional(readOnly = true)
@@ -44,7 +47,8 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public UserDTO findUserWithDetailsByIdAsDTO(@EntityId Long userId) {
-		throw new UnsupportedOperationException("Not implemented yet!");
+		return userRepository.findUserWithDetailsByIdAsDTO(userId)
+				.orElseThrow(()-> new PersistentEntityNotFoundException(userId, User.class));
 	}
 
 	@Transactional(readOnly = false)
@@ -60,6 +64,7 @@ public class UserService {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new PersistentEntityNotFoundException(userId, User.class));
 
+		userUpdateDTO.setDependencies(new UserDTODependencies(userRepository, passwordEncoder));
 		userUpdateDTO.applyUpdates(user);
 	}
 }

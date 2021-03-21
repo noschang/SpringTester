@@ -83,14 +83,16 @@ ARG INSTALL_GRAPHIC_LIBS="false"
 
 COPY build-files/library-scripts/graphic-libs-debian.sh /tmp/library-scripts/
 
-RUN if [ "${INSTALL_GRAPHIC_LIBS}" = "true" ]; then bash /tmp/library-scripts/graphic-libs-debian.sh; fi
+RUN if [ "${INSTALL_GRAPHIC_LIBS}" = "true" ]; then bash /tmp/library-scripts/graphic-libs-debian.sh; fi \
+    && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
 
 # [Option] Install graphic libraries
 ARG INSTALL_SQLPLUS="false"
 
 COPY build-files/library-scripts/sqlplus-debian.sh /tmp/library-scripts/
 
-RUN if [ "${INSTALL_SQLPLUS}" = "true" ]; then bash /tmp/library-scripts/sqlplus-debian.sh; fi
+RUN if [ "${INSTALL_SQLPLUS}" = "true" ]; then bash /tmp/library-scripts/sqlplus-debian.sh; fi \
+    && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \

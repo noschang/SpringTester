@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion;
 
 @DisplayName("Tests for the BCryptPasswordConverter")
 public class BCryptPasswordConverterTest {
@@ -24,7 +26,9 @@ public class BCryptPasswordConverterTest {
 	// randomizing some data. Get the seed from the valid charset
 	private final Random random = new Random(CHARSET.hashCode());
 
-	private final BCryptPasswordConverter converter = new BCryptPasswordConverter();
+	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(BCryptVersion.$2A, 12);
+
+	private final BCryptPasswordConverter converter = new BCryptPasswordConverter(encoder);
 
 	@Test
 	@DisplayName("The regex for bcrypt passwords accepts valid inputs?")

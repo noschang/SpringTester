@@ -19,7 +19,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public final class PostInsertDTO implements PersistenEntityInsertDTO<Post> {
+public final class PostInsertDTO implements PersistenEntityInsertDTO<Post,Void> {
 
 	@NotBlank
 	@Size(max = 128)

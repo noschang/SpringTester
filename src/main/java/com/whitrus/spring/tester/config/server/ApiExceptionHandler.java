@@ -1,13 +1,17 @@
 package com.whitrus.spring.tester.config.server;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +27,51 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class ApiExceptionHandler
 {
+	// TODO: handle data integrity violation exception
+//	private static final Pattern DB_CONSTRAINT_PATTERN = Pattern.compile("(?<name>(?<type>(NN|UK|PK|CHK))_#(\\d|\\w)+(_(\\d|\\w)+)*_(\\$(\\d|\\w)+)(_\\$(\\d|\\w)+)*)");
+//	
+//	public static void main(String[] args) {
+//		String error = "ORA-00001: restrição exclusiva (MAIN_DEV.UK_#USER_$LOGIN) violada";
+//		
+//		var matcher = DB_CONSTRAINT_PATTERN.matcher(error);
+//		
+//		if (matcher.find()) {
+//			var type = matcher.group("type");
+//			var name = matcher.group("name");
+//			var message = new StringBuilder();
+//			
+//			switch (type) {
+//			case "NN" -> message.append("NULL constraint violated: %s".formatted(name));
+//			case "UK" -> message.append("UNIQUE constraint violated: %s".formatted(name));
+//			case "PK" -> message.append("PRIMARY KEY constraint violated: %s".formatted(name));
+//			case "CHK" -> message.append("CHECK constraint violated: %s".formatted(name));
+//			default -> message.append("");
+//			}
+//			
+//			System.out.println(message.toString());
+//		}
+//		else {
+//			System.out.println("SHIT!");
+//		}
+//	}
+//	
+//	
+//	@ExceptionHandler({ DataIntegrityViolationException.class })
+//	@ResponseBody
+//	public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) throws DataIntegrityViolationException
+//	{
+//		Throwable cause = ex.getMostSpecificCause();
+//		
+//		if (cause instanceof SQLIntegrityConstraintViolationException) {
+//			var sqlException = (SQLIntegrityConstraintViolationException) cause;
+//			var message = sqlException.getMessage();
+//			
+//			
+//		}
+//		
+//		return null;
+//	}
+	
 	@ExceptionHandler({ ConstraintViolationException.class })
 	@ResponseBody
 	public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, WebRequest request)
@@ -57,7 +106,7 @@ public class ApiExceptionHandler
 		return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
 	}
 
-	//TODO: improve this method to better handle errors and give bettre messages
+	//TODO: improve this method to better handle errors and give better messages
 	@ExceptionHandler({ MethodArgumentNotValidException.class })
 	@ResponseBody
 	public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) throws MethodArgumentNotValidException
@@ -100,7 +149,7 @@ public class ApiExceptionHandler
 			else {
 				throw ex;
 			}
-		}
+		}		
 
 		ApiErrorBuilder errorBuilder = new ApiErrorBuilder();
 

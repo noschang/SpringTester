@@ -1,12 +1,24 @@
-{"properties": [
-  {
-    "name": "com.withrus.spring.tester.security.bcrypt.version",
-    "type": "java.lang.String",
-    "description": "The bcrypt version to use when encrypting the passwords"
-  },
-  {
-    "name": "com.withrus.spring.tester.security.bcrypt.strength",
-    "type": "java.lang.String",
-    "description": "The strength (work factor) to use when encrypting the passwords"
-  }
-]}
+{
+  "properties": [
+    {
+      "name": "com.withrus.spring.tester.security.bcrypt.version",
+      "type": "java.lang.String",
+      "description": "The bcrypt version to use when encrypting the passwords"
+    },
+    {
+      "name": "com.withrus.spring.tester.security.bcrypt.strength",
+      "type": "java.lang.String",
+      "description": "The strength (work factor) to use when encrypting the passwords"
+    },
+    {
+      "name": "server.locale.default",
+      "type": "java.lang.String",
+      "description": "The default locale of the server"
+    },
+    {
+      "name": "server.locale.parameter-name",
+      "type": "java.lang.String",
+      "description": "The name of the request parameter used to change the locale of the server for a specific request"
+    }
+  ]
+}

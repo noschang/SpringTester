@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
+set -e
+
 echo "Installing sqlplus dependencies" &&
     apt-get update &&
     export DEBIAN_FRONTEND=noninteractive &&
     apt-get -y install --no-install-recommends \
-        glibc-doc libaio1 &&
-    apt-get clean -y &&
-    rm -rf /var/lib/apt/lists/*
+        glibc-doc libaio1
 
 echo "Installing sqlplus"
 
@@ -37,6 +37,6 @@ EOF
 
 chmod 755 /usr/bin/sqlplus
 
-rm -Rf /tmp/library-scripts "${TMP_DIR}"
+rm -Rf "${TMP_DIR}"
 
 cd "${CURR_DIR}"

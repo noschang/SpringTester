@@ -29,6 +29,7 @@ public class JacksonConfig {
 				// Consider using application.properties
 				jacksonObjectMapperBuilder.dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 				jacksonObjectMapperBuilder.modulesToInstall(module);
+				jacksonObjectMapperBuilder.failOnUnknownProperties(true);
 			}
 		};
 	}

@@ -17,15 +17,18 @@ import com.whitrus.spring.tester.domain.user.model.UserDTO;
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	@Query("SELECT NEW com.whitrus.spring.tester.domain.user.model.UserDTO(U.id, U.name, U.normalizedName, U.login) FROM User U")
+	@Query("SELECT NEW com.whitrus.spring.tester.domain.user.model.UserDTO(U.id, U.name, U.active) FROM User U")
 	public Page<UserDTO> findAllUsersAsDTO(Pageable pageable);
 
-	@Query("SELECT NEW com.whitrus.spring.tester.domain.user.model.UserDTO(U.id, U.name, U.normalizedName, U.login) FROM User U")
+	@Query("SELECT NEW com.whitrus.spring.tester.domain.user.model.UserDTO(U.id, U.name, U.login, U.active) FROM User U")
 	public Page<UserDTO> findAllUsersWithDetailsAsDTO(Pageable pageable);
 
-	@Query("SELECT NEW com.whitrus.spring.tester.domain.user.model.UserDTO(U.id, U.name, U.normalizedName, U.login) FROM User U WHERE U.id = :userId")
+	@Query("SELECT NEW com.whitrus.spring.tester.domain.user.model.UserDTO(U.id, U.name, U.active) FROM User U WHERE U.id = :userId")
 	public Optional<UserDTO> findUserByIdAsDTO(@Param("userId") Long userId);
 
-	@Query("SELECT NEW com.whitrus.spring.tester.domain.user.model.UserDTO(U.id, U.name, U.normalizedName, U.login) FROM User U WHERE U.id = :userId")
+	@Query("SELECT NEW com.whitrus.spring.tester.domain.user.model.UserDTO(U.id, U.name, U.login, U.active) FROM User U WHERE U.id = :userId")
 	public Optional<UserDTO> findUserWithDetailsByIdAsDTO(@Param("userId") Long userId);
+
+	@Query("SELECT U.password FROM User U WHERE U.id = :userId")
+    public String findUserPasswordById(@Param("userId") Long userId);
 }

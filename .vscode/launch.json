@@ -6,22 +6,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch Testinho",
+            "name": "Select File",
             "request": "launch",
-            "mainClass": "com.whitrus.spring.tester.Testinho",
-            "projectName": "SpringTest"
-        },
-        {
-            "type": "java",
-            "name": "Run/Debug Spring Tester",
-            "request": "launch",
-            "mainClass": "com.whitrus.spring.tester.SpringTesterApplication"
-        },
-        {
-            "type": "java",
-            "name": "Run Current File",
-            "request": "launch",
-            "mainClass": "${file}"
+            "mainClass": ""
         }
     ]
 }

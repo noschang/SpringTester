@@ -1,8 +1,10 @@
 package com.whitrus.spring.tester.domain.user.model;
 
+import static com.whitrus.spring.tester.domain.user.model.UserRole.USER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.SEQUENCE;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -22,6 +24,7 @@ import javax.validation.constraints.Size;
 import com.whitrus.spring.tester.domain.PersistentEntity;
 import com.whitrus.spring.tester.domain.converters.BCryptPasswordConverter;
 import com.whitrus.spring.tester.domain.institution.model.Institution;
+import com.whitrus.spring.tester.util.StringUtils;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,31 +33,29 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "xuser")
+@Table
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class User extends PersistentEntity {
 
 	@Id
-	@GeneratedValue(strategy = SEQUENCE, generator = "seq_xuser")
-	@SequenceGenerator(name = "seq_xuser", sequenceName = "seq_xuser", allocationSize = 10000)
+	@GeneratedValue(strategy = SEQUENCE, generator = "seq_user")
+	@SequenceGenerator(name = "seq_user", sequenceName = "seq_user", allocationSize = 1000)
 	@Column(nullable = false, updatable = false)
 	@Getter
 	private Long id = null;
 
 	@NotBlank
-	@Size(min = 3, max = 64)
+	@Size(max = 64)
 	@Column(nullable = false, unique = false, length = 64)
 	@Getter
-	@Setter
 	private String name;
 
 	@NotBlank
-	@Size(min = 3, max = 64)
+	@Size(max = 64)
 	@Column(nullable = false, unique = false, length = 64)
 	@Getter
-	@Setter
-	private String normalizedName;
+	private String nameNormalized;
 
 	@NotBlank
 	@Size(min = 3, max = 64)
@@ -70,9 +71,25 @@ public class User extends PersistentEntity {
 	private String password;
 
 	@NotNull
+	@Column(nullable = false, unique = false)
+	@Getter
+	@Setter
+	private Boolean active;
+
+	@NotNull
 	@ManyToMany(mappedBy = "users", fetch = LAZY)
 	@ToString.Exclude
 	private Set<Institution> institutions = new LinkedHashSet<>();
+
+	@NotNull
+	@Convert(converter = UserRoleConverter.class)
+	@Column(nullable = false, length = UserRoleConverter.ROLES_MAX_LENGTH)
+	private Set<UserRole> roles = new LinkedHashSet<>(Arrays.asList(USER));
+
+	public void setName(String name) {
+		this.name = name;
+		this.nameNormalized = StringUtils.normalize(name);
+	}
 
 	public Set<Institution> getInstitutions() {
 		return Collections.unmodifiableSet(institutions);
@@ -88,5 +105,17 @@ public class User extends PersistentEntity {
 		if (this.institutions.remove(institution)) {
 			institution.removeUser(this);
 		}
+	}
+
+	public Set<UserRole> getRoles() {
+		return Collections.unmodifiableSet(roles);
+	}
+
+	public void addRole(@NonNull UserRole role) {
+		this.roles.add(role);
+	}
+
+	public void removeRole(@NonNull UserRole role) {
+		this.roles.remove(role);
 	}
 }
