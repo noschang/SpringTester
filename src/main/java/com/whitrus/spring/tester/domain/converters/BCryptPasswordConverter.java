@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +15,11 @@ import lombok.RequiredArgsConstructor;
 @Converter
 @RequiredArgsConstructor
 public class BCryptPasswordConverter implements AttributeConverter<String, String> {
-
+	
 	private final Pattern bCryptPattern = Pattern.compile(
 			"^[$](?<version>2[abxy]?)[$](?<strength>(?<cost>(0[4-9]|[12][0-9]|3[01])))[$](?<password>((?<salt>[./0-9a-zA-Z]{22})(?<hash>[./0-9a-zA-Z]{31})))$");
 
+//	@Autowired
 	private final BCryptPasswordEncoder encoder;
 
 	@Override

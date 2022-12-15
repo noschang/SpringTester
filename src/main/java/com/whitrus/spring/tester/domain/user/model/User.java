@@ -1,8 +1,10 @@
 package com.whitrus.spring.tester.domain.user.model;
 
 import static com.whitrus.spring.tester.domain.user.model.UserRole.USER;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.SEQUENCE;
+import static lombok.AccessLevel.NONE;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,8 +17,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -24,6 +28,7 @@ import javax.validation.constraints.Size;
 import com.whitrus.spring.tester.domain.PersistentEntity;
 import com.whitrus.spring.tester.domain.converters.BCryptPasswordConverter;
 import com.whitrus.spring.tester.domain.institution.model.Institution;
+import com.whitrus.spring.tester.domain.production.model.Production;
 import com.whitrus.spring.tester.util.StringUtils;
 
 import lombok.Getter;
@@ -47,13 +52,13 @@ public class User extends PersistentEntity {
 
 	@NotBlank
 	@Size(max = 64)
-	@Column(nullable = false, unique = false, length = 64)
+	@Column(nullable = false, length = 64)
 	@Getter
 	private String name;
 
 	@NotBlank
 	@Size(max = 64)
-	@Column(nullable = false, unique = false, length = 64)
+	@Column(nullable = false, length = 64)
 	@Getter
 	private String nameNormalized;
 
@@ -65,13 +70,13 @@ public class User extends PersistentEntity {
 	private String login;
 
 	@Convert(converter = BCryptPasswordConverter.class)
-	@Column(nullable = false, unique = false, length = 60)
+	@Column(nullable = false, length = 60)
 	@Getter
 	@Setter
 	private String password;
 
 	@NotNull
-	@Column(nullable = false, unique = false)
+	@Column(nullable = false)
 	@Getter
 	@Setter
 	private Boolean active;
@@ -85,6 +90,13 @@ public class User extends PersistentEntity {
 	@Convert(converter = UserRoleConverter.class)
 	@Column(nullable = false, length = UserRoleConverter.ROLES_MAX_LENGTH)
 	private Set<UserRole> roles = new LinkedHashSet<>(Arrays.asList(USER));
+	
+	@NotNull
+	@Valid
+	@OneToMany(mappedBy = "author", cascade = ALL, fetch = LAZY, orphanRemoval = true)
+	@Setter(NONE)
+	@ToString.Exclude
+	private Set<Production> productions = new LinkedHashSet<>();
 
 	public void setName(String name) {
 		this.name = name;
@@ -117,5 +129,26 @@ public class User extends PersistentEntity {
 
 	public void removeRole(@NonNull UserRole role) {
 		this.roles.remove(role);
+	}
+	
+	public Set<Production> getProductions()
+	{
+		return Collections.unmodifiableSet(productions);
+	}
+
+	public void addProduction(@NonNull Production production)
+	{
+		if (this.productions.add(production))
+		{
+			production.setAuthor(this);
+		}
+	}
+
+	public void removeProduction(@NonNull Production production)
+	{
+		if (this.productions.remove(production))
+		{
+			production.unsetAuthor(this);
+		}
 	}
 }
